@@ -1,7 +1,7 @@
 var userModel = require(__base + "models/mongoose/mongoose-models").User;
 var jwt = require("jwt-simple");
 var fs = require("fs");
-var config = require(__base + "data/private/config.json");
+var config = require(__base + "data/private/config.js");
 var Music = require(__base + "modules/Music");
 
 var login = function(req, res) {

@@ -10,7 +10,7 @@ var winston = require('winston');
 var expressWinston = require('express-winston');
 var bodyParser = require('body-parser');
 var bearerToken = require('express-bearer-token');
-var config = require("./data/private/config.json");
+var config = require("./data/private/config.js");
 var jwt = require("jwt-simple");
 var path = require("path");
 

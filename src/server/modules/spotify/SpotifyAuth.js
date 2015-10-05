@@ -2,7 +2,7 @@
 /*global require*/
 /*global module*/
 /*global console*/
-var config = require(__base + "data/private/config.json"),
+var config = require(__base + "data/private/config.js"),
 	mongoose = require("mongoose"),
 	request = require("request-promise"),
 	models = require(__base + "models/mongoose/mongoose-models.js"),

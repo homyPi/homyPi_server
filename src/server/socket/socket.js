@@ -2,7 +2,7 @@
  * Created by nolitsou on 9/6/15.
  */
 var socketioJwt = require("socketio-jwt");
-var config = require(__base + "data/private/config.json");
+var config = require(__base + "data/private/config.js");
 
 var alarmSocket = require("./alarmSocket");
 var playerSocket = require("./playerSocket");

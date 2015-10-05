@@ -1,4 +1,4 @@
-var config = require(__base + 'data/private/config.json').gracenote_config,
+var config = require(__base + 'data/private/config.js').gracenote_config,
 	request = require('request'),
 	Promise = require("bluebird"),
 	_ = require("lodash");

@@ -3,7 +3,7 @@
 /*global console*/
 /*jshint -W083 */
 /*loopfunc: true*/
-var config = require(__base + 'data/private/config.json'),
+var config = require(__base + 'data/private/config.js'),
 	request = require('request'),
 	qs = require('qs'),
 	winston = require('winston'),

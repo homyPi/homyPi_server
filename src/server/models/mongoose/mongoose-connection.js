@@ -1,6 +1,6 @@
 /*global console*/
 /*global module*/
-var config = require(__base + "data/private/config.json");
+var config = require(__base + "data/private/config.js");
 var mongoose = require('mongoose');
 var models = require('./mongoose-models.js');
 module.exports = function () {
