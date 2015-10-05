@@ -1,0 +1,75 @@
+var userModel = require(__base + "models/mongoose/mongoose-models").User;
+var jwt = require("jwt-simple");
+var fs = require("fs");
+var config = require(__base + "data/private/config.json");
+var Music = require(__base + "modules/Music");
+
+var login = function(req, res) {
+	if (!req.body.username || !req.body.password) {
+		return res.json({error: "invalid request"});
+	}
+	userModel.findOne({username: req.body.username}, function(err, userInfo) {
+		if (!userInfo) {
+			return res.json({error: "invalid"});
+		} else {
+			if (checkPassword(req.body.password, userInfo)) {
+				return res.json({token: generateToken(
+					{
+						_id: userInfo._id,
+						username: userInfo.username,
+						isRaspberry: req.body.isRaspberry
+					}
+				)});
+			} else {
+				return res.json({error: "invalid"});
+			}
+		}
+		res.json({err: err, data:data});
+	})
+};
+
+var checkPassword = function(requestPassword, userInfo) {
+	return requestPassword === userInfo.password;
+};
+
+var generateToken = function(userInfo) {
+	return jwt.encode(userInfo, config.jwtSecret);
+};
+
+var isLoggedIn = function(req, res, next) {
+	if (req.user) {
+		return next();
+	} else {
+		return res.json({error: "unauthorized"});
+	}
+};
+
+var getMe = function(req, res) {
+	res.json({user: req.user});
+};
+
+var myArtists = function(req, res) {
+	options = {
+		offset: req.param("offset"),
+		limit: req.param("limit")
+	}
+	if(req.param("convertTo") && (!req.param("limit") || req.param("limit") < 0)) {
+		options.limit = 100;
+	}
+	Music.getMyArtists(req.user, options)
+		.then(function(artists) {
+			console.log(JSON.stringify(artists, null, 4))
+			res.json({artists: artists});
+		}).catch(function(err) {
+			console.log(err);
+			return res.json({err: err});
+		});
+}
+
+module.exports = {
+	login: login,
+	isLoggedIn: isLoggedIn,
+	me: getMe,
+
+	myArtists: myArtists
+};
