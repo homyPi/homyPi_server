@@ -1,5 +1,9 @@
 import $ from 'jquery'
 import UserAPI from "../apis/UserAPI.jsx"
+
+import config from "../config.js"
+var serverUrl = config.server_url || "";
+
 function setHeaders(xhr) {
     xhr.setRequestHeader ("Authorization", "Bearer " + UserAPI.getToken());
 }
@@ -8,7 +12,7 @@ export default {
 	getAll() {
 		return new Promise((resolve, reject) => {
 			$.ajax({
-					url: "http://localhost:3000/api/raspberries/",
+					url: serverUrl + "/api/raspberries/",
 					type: "GET",
 					beforeSend: setHeaders,
 					success: function(resp) {

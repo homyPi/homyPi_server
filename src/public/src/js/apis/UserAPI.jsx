@@ -1,6 +1,8 @@
 import $ from "jquery";
 import Io from '../io.jsx'
 
+import config from "../config.js";
+var serverUrl = config.server_url || "";
 var token = null;
 
 var setToken = function(newToken) {
@@ -25,7 +27,7 @@ export default {
 	login(username, password) {
 		return new Promise(function(resolve, reject) {
 			$.ajax({
-					url: "http://localhost:3000/api/users/login",
+					url: serverUrl + "/api/users/login",
 					type: "POST",
 				    data: JSON.stringify({ username: username, password: password }),
 				    contentType: "application/json; charset=utf-8",
