@@ -34,5 +34,5 @@ src/public/node_modules
 bower_components
 src/public/bower_components
 # Server config
-src/server/data/private/
+#src/server/data/private/
 src/public/dist
