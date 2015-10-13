@@ -1,10 +1,18 @@
 var Playlist = require(__base + "models/Playlist");
 
+/**
+ * Get current trackset
+ */
 var get = function(req, res) {
 	Playlist.get().then(function(playlist) {
 		res.json({playlist: {"trackset": playlist.tracks, "idPlaying": playlist.idPlaying}});
 	});
 };
+
+/**
+ * Delete a track from current trackset
+ * @param {ObjectId} req.params.trackId Id of the track to delete
+ */
 var deleteTrack = function(req, res) {
 	Playlist.deleteTrack(req.params.trackId).then(function() {
 		res.json({status: "success"});
@@ -12,6 +20,7 @@ var deleteTrack = function(req, res) {
 		res.json({err: err});
 	});
 };
+
 
 var add = function(req, res) {
 	var data = req.body;
@@ -43,7 +52,9 @@ var add = function(req, res) {
 		}
 	});
 }
-
+/**
+ * Remove al tracks from trackset
+ */
 var clearPlaylist = function(req, res) {
 	Playlist.clearPlaylist().then(function() {
 		console.log("CLEAR_PLAYLIST: done");

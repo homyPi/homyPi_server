@@ -1,6 +1,13 @@
 'use strict';
 global.__base = __dirname + "/";
 
+var env = require('node-env-file');
+try {
+	env(".env");
+} catch(e) {
+	console.log("no env file");
+}
+
 var express = require('express');
 var routes = require("./routes");
 var schema = require('./models/mongoose/mongoose-schema.js')();

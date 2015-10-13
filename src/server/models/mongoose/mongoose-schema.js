@@ -1,11 +1,14 @@
 /*global module*/
 /*global require*/
+
+var mongoose = require("mongoose"),
+	bcrypt   = require('bcrypt-nodejs');
 module.exports = function () {
 	"use strict";
-	var mongoose = require("mongoose"),
-		bcrypt   = require('bcrypt-nodejs'),
-
-		Schema = mongoose.Schema,
+	if (process.env.schemaLoaded) {
+		return null;
+	}
+	var Schema = mongoose.Schema,
 		alarmSchema = new Schema({
 			user: Schema.Types.Mixed,
 			hours: { type: Number, min: 0, max: 23 },
@@ -111,5 +114,6 @@ module.exports = function () {
 	mongoose.model('Artist', artistSchema);
 	mongoose.model('Playlist', playlistSchema);
 	mongoose.model('Raspberry', raspberrySchema);
+	process.env.schemaLoaded = true;
 	return Schema;
 };

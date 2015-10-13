@@ -15,11 +15,17 @@
     "express-winston": "^0.4.1",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
+    "gulp-connect": "^2.2.0",
+    "gulp-develop-server": "^0.4.3",
+    "gulp-livereload": "^3.8.0",
+    "gulp-nodemon": "^2.0.4",
     "gulp-sass": "^2.0.4",
     "gulp-util": "^3.0.6",
+    "gulp-watch": "^4.3.5",
     "jwt-simple": "^0.3.1",
     "lodash": "^3.10.1",
     "mongoose": "^4.1.7",
+    "node-env-file": "^0.1.7",
     "q": "^1.4.1",
     "qs": "^5.0.0",
     "reactify": "^1.1.1",
@@ -32,17 +38,14 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.4.0",
-    "winston": "^1.0.1",
-    "gulp-connect": "^2.2.0",
-    "gulp-develop-server": "^0.4.3",
-    "gulp-livereload": "^3.8.0",
-    "gulp-nodemon": "^2.0.4",
-    "gulp-watch": "^4.3.5"
+    "winston": "^1.0.1"
   },
   "devDependencies": {
+    "mocha": "^2.3.3",
+    "should": "^7.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha ./src/server/test --timeout 10000 -r ./src/server/test/init",
     "start": "gulp buildClient; node src/server/app.js",
     "postinstall": "cd src/public/;npm install; bower install; cd ../../"
   },

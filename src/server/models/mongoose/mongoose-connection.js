@@ -3,7 +3,7 @@
 var config = require(__base + "data/private/config.js");
 var mongoose = require('mongoose');
 var models = require('./mongoose-models.js');
-module.exports = function () {
+module.exports = function (callback) {
     "use strict";
     console.log("connecting to " + config.server_config.MONGO_URI);
     mongoose.connect(config.server_config.MONGO_URI, function (err) {
@@ -13,9 +13,16 @@ module.exports = function () {
     });
     var db = mongoose.connection;
 
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function callback() {
+    db.on('error', function(err) {
+        if(callback) {
+            callback(err);
+        }
+    });
+    db.once('open', function () {
         console.log("connected");
+        if(callback) {
+            callback();
+        }
     });
     return db;
 

@@ -1,0 +1,11 @@
+var spawn = require('child_process').spawn;
+var rl = require('readline').createInterface({
+  input: require('fs').createReadStream('./.env')
+});
+rl.on('line', function (line) {
+  if(line) {  
+    var child = spawn('travis', ['encrypt', '--add', 'env.matrix', line]);
+    child.stdout.on('data', function (data) { console.log("line: " + data); });
+    child.stdout.on('end', function () { console.log(line + " exported"); });
+  }
+});

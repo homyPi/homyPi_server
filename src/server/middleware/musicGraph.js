@@ -4,6 +4,10 @@
 var Spotify = require(__base + "modules/spotify/Spotify");
 var SpotifyAuth = require(__base + "modules/spotify/SpotifyAuth");
 var MusicGraph = require(__base + "modules/MusicGraph");
+
+/**
+ * Get a new Musicgraph playlist
+ */
 var playlist = function (req, res) {
 	'use strict';
 	MusicGraph.generatePlaylist(req.user)

@@ -1,6 +1,9 @@
 var Raspberry  = require(__base + "models/Raspberry");
 var _ = require("lodash");
 
+/**
+ * Get all connected rasberries
+ */
 var getAll = function(req, res) {
 	var list = [];
 	_.forEach(Raspberry.connectedClients, function(raspberry) {
