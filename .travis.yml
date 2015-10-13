@@ -5,7 +5,7 @@ services:
   - mongodb
 before_script:
   - sleep 15
-  - mongo mydb_test --eval 'db.addUser("travis", "test");
+  - mongo mydb_test --eval 'db.addUser("travis", "test");'
 env:
   matrix:
   - secure: p4TdejxG/w2RSzF28dbGszVHOHcixjK7SfIGIkRwik3pEjW4Np54x+lolNSr7XG0cBnvoNvYCVDK2st7WROpnDCT3Yx6akjiALVFmOmpeVh+9FfCsey1T+qvTX4LBgPZ/HqdfnmZbU12wkXL2npIQj7qPEbvEVnl4293uh6OyFi3lopgv1Ez281rkMRXqCzO9JEl1M2U7BFKAYSQZRA5kC4PxYs2EQHICB9oY0z6F0/ZGXTvKvl2fRMtc5zZJAakY3ViiL4cIfPWtnrudsZgsf3UvdFSSNLJZfilDgxdQWCpPuB1AdOllYJpyBcv09xka8MqwhjQ1toD4EOgT+yNN0crQuUGx/ix5pcRjJqequoBER9N9sJAcwstQHjnI+CTAVSYQVheB4gIPRMb5rqi5Fx+RjlrLYcMxV8EWRGI4vNRzMtfgHjfOsl2ueYS0xiK0HYMWIe5FGKvg6qGvD4I0yYEMpXm1/r3rhv0XRUr0uhAYkG/OjOXCgb6pF+epYVgBBfAiQEDlrwuE5VRRrlGbf6/nzM9InoC3NAq2YMIhAR0hBss9WruXLF3u+7pCQdRPHFiwTcd8jJ/so2ve5vn9/7/6OZatwdfzd17BQ8HeJTJbTCn/+bNYh7wbbTYwXalEDlYPdiXDYHeYIxBgOo4SEZvQm6TPsHSm6uaGCbzZKM=
