@@ -1,11 +1,13 @@
 'use strict';
 global.__base = __dirname + "/";
+global.__modules = __dirname + "/modules/";
 
 var env = require('node-env-file');
 try {
 	env(".env");
 } catch(e) {
-	console.log("no env file");
+	console.log(e);
+	console.log("unable to get env file");
 }
 
 var express = require('express');
