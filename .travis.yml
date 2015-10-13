@@ -6,5 +6,6 @@ services:
 before_script:
 - sleep 15
 - mongo mydb_test --eval 'db.addUser("travis", "test");'
-env:
-  secure: PPdgWNub/6L6iIKC19BdIcESn7Jjrb+F1Nz7qCVs75eJzgS4H82n+lIxrdN8OW4DyRhdY52+h88lUvz032nqszlv+WhQjnZ5AX6AdrQ9uPvH8NbxlCDHUCfbuizEjbJ/rxHKIbKesp4rQw3T1W1uTRxdmGqqncbeqrOsHIICar+KIV0c64cTGqhM1NqJNYUzEjUD3Me2rU/m8HoJD6qRzT4Dfu5RW8n3U8o8Q0ieN2n/DwIf9QTsG+C3lAUc69+3pTwIusSQBPLM9jUlGPmh2Rn6Pt5Srdu09a+64iPUmOLrzhvabLS16XG5uoCzp55H73qLZWV9a02KLiQe9FDWg3weWvByl2xIJOOjSN3PPmfcTgvlIO/NGbEYrJhIbIIrbM5p/uWyUCjPjuTXMWrDf9G7kQri+33EuNaTCNIXox79yu0gaSQT3EVaddDx6lf4hVPCnzEnPVtwJGgM03PvrUifZQfvou1Y4urkg4SO/9kzp7Im7KlM9p8RcK6ORG1gPZtIskP00h5RIkYysEcIL2X82QwONbwd9AMKdfyuAlj7J+7vJJrf0E8P5cHVjCmSiAmOwYmU1EK0y9gVhGU0m4Fgi807yB+klaOG8qj86pvvGyK3f99QPJYNc8XiXMUdfSwIyLO+1OJp4IlQDkyx8f9j5PYq3z3Y+/775Qa/ecA=
+before_install:
+- openssl aes-256-cbc -K $encrypted_ee28590b53fb_key -iv $encrypted_ee28590b53fb_iv
+  -in .env.enc -out .env -d
