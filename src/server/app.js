@@ -25,6 +25,9 @@ var path = require("path");
 
 var app = express();
 
+var ModuleManager = require("./modules/ModuleManager");
+ModuleManager.load();
+
 var server = require('http').createServer(app);
 app.use(express.static(path.join(__dirname, '../public/dist')));
 app.use(express.static(path.join(__dirname, '../../bower_components')));

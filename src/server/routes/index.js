@@ -6,6 +6,8 @@ var playlistRoutes = require("./playlistRoutes");
 var gracenoteRoutes = require("./gracenoteRoutes");
 var raspberryRoutes = require("./raspberryRoutes");
 
+var modulesRoutes = require("./modulesRoutes");
+
 module.exports = function(app) {
 
 	app.get('/', function (req, res) {
@@ -19,4 +21,7 @@ module.exports = function(app) {
 	playlistRoutes(app);
 	gracenoteRoutes(app);
 	raspberryRoutes(app);
+
+
+	modulesRoutes(app);
 };
