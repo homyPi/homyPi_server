@@ -14,6 +14,6 @@ module.exports = function(app, router) {
 	});
 	router.use("/", function(req, res) {
 		res.json(modulesManager.modules);
-	})
+	});
 	app.use("/api/modules", router);
 };

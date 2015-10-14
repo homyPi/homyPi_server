@@ -2,7 +2,7 @@ import $ from 'jquery'
 import UserAPI from "../apis/UserAPI.jsx"
 
 import config from "../config.js"
-var serverUrl = config.server_url || "";
+var serverUrl = (config.server_url || "") + "/api/modules/alarms";
 
 function setHeaders(xhr) {
     xhr.setRequestHeader ("Authorization", "Bearer " + UserAPI.getToken());
@@ -12,7 +12,7 @@ export default {
 	getAlarms() {
 		return new Promise((resolve, reject) => {
 			$.ajax({
-					url: serverUrl + "/api/alarms/",
+					url: serverUrl + "/",
 					type: "GET",
 					beforeSend: setHeaders,
 					success: function(resp) {
@@ -28,7 +28,7 @@ export default {
 	deleteAlarm(alarm) {
 		return new Promise((resolve, reject) => {
 			$.ajax({
-					url: serverUrl + "/api/alarms/" + alarm._id,
+					url: serverUrl + "/" + alarm._id,
 					type: "DELETE",
 					beforeSend: setHeaders,
 					success: function(resp) {
@@ -43,7 +43,7 @@ export default {
 	insertAlarm(alarm) {
 		return new Promise((resolve, reject) => {
 			$.ajax({
-					url: serverUrl + "/api/alarms/",
+					url: serverUrl + "/",
 					type: "POST",
 				    data: JSON.stringify({ alarm: alarm }),
 				    contentType: "application/json; charset=utf-8",
@@ -62,7 +62,7 @@ export default {
 	updateAlarm(alarm) {
 		return new Promise((resolve, reject) => {
 			$.ajax({
-					url: serverUrl + "/api/alarms/" + alarm._id,
+					url: serverUrl + "/" + alarm._id,
 					type: "PUT",
 					data: JSON.stringify({
 						hours: alarm.hours,
@@ -83,7 +83,7 @@ export default {
 	enableAlarm(alarm, enabled) {
 		return new Promise(function(resolve, reject) {
 			$.ajax({
-					url: serverUrl + "/api/alarms/" + alarm._id,
+					url: serverUrl + "/" + alarm._id,
 					type: "PUT",
 					data: JSON.stringify({ enable: enabled}),
 				    contentType: "application/json; charset=utf-8",

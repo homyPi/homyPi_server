@@ -4,6 +4,7 @@ var modules = {
 		"path": "music"
 	},
 	"spotify": {
+		"path": "music/spotify",
 		"require": [{module: "music", version: "0.1"}]
 	}
 }

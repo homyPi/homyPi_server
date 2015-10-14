@@ -3,7 +3,7 @@ import Io from "../io.jsx"
 import UserAPI from "../apis/UserAPI.jsx"
 
 import config from "../config.js"
-var serverUrl = config.server_url || "";
+var serverUrl = (config.server_url || "") + "/api/modules/music/playlists";
 
 function setHeaders(xhr) {
     xhr.setRequestHeader ("Authorization", "Bearer " + UserAPI.getToken());
@@ -14,7 +14,7 @@ export default {
 	loadPlaylist() {
 		return new Promise((resolve, reject) => {
 			$.ajax({
-					url: serverUrl + "/api/playlists/",
+					url: serverUrl + "/",
 					type: "GET",
 					beforeSend: setHeaders,
 					success: function(resp) {
