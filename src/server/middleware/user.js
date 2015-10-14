@@ -2,7 +2,6 @@ var userModel = require(__base + "models/mongoose/mongoose-models").User;
 var jwt = require("jwt-simple");
 var fs = require("fs");
 var config = require(__base + "data/private/config.js");
-var Music = require(__base + "modules/Music");
 
 var login = function(req, res) {
 	if (!req.body.username || !req.body.password) {
@@ -47,7 +46,7 @@ var isLoggedIn = function(req, res, next) {
 var getMe = function(req, res) {
 	res.json({user: req.user});
 };
-
+/*
 var myArtists = function(req, res) {
 	options = {
 		offset: req.param("offset"),
@@ -65,11 +64,11 @@ var myArtists = function(req, res) {
 			return res.json({err: err});
 		});
 }
-
+*/
 module.exports = {
 	login: login,
 	isLoggedIn: isLoggedIn,
 	me: getMe,
 
-	myArtists: myArtists
+//	myArtists: myArtists
 };

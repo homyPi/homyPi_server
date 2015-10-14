@@ -30,7 +30,7 @@ ModuleManager.load();
 
 var server = require('http').createServer(app);
 app.use(express.static(path.join(__dirname, '../public/dist')));
-app.use(express.static(path.join(__dirname, '../../bower_components')));
+app.use(express.static(path.join(__dirname, '../../node_modules')));
 app.use(bearerToken());
 app.use(bodyParser());
 app.use(function(req, res, next) {

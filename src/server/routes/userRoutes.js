@@ -5,5 +5,5 @@ module.exports = function(app) {
 
 	app.get('/api/users/me', UserMiddleware.isLoggedIn, UserMiddleware.me);
 
-	app.get('/api/users/me/artists', UserMiddleware.isLoggedIn, UserMiddleware.myArtists);
+	//app.get('/api/users/me/artists', UserMiddleware.isLoggedIn, UserMiddleware.myArtists);
 };
