@@ -51,7 +51,9 @@
     "react": "^0.13.3",
     "react-router": "^1.0.0-rc1",
     "react-tap-event-plugin": "^0.1.7",
-    "socket.io-client": "^1.3.6"
+    "socket.io-client": "^1.3.6",
+    "homyPi-server-music": "../homyPi_plugins/music/",
+    "homyPi-server-spotify": "../homyPi_plugins/spotify/"
   },
   "devDependencies": {
     "mocha": "^2.3.3",

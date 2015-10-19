@@ -29,6 +29,13 @@ var ModuleManager = require("./modules/ModuleManager");
 ModuleManager.load();
 
 var server = require('http').createServer(app);
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Content-Type");
+    next();
+});
+app.use(express.static(path.join(__dirname, './data/public')));
 app.use(express.static(path.join(__dirname, '../public/dist')));
 app.use(express.static(path.join(__dirname, '../../node_modules')));
 app.use(bearerToken());
@@ -43,12 +50,7 @@ app.use(function(req, res, next) {
 	}
 });
 
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Content-Type");
-    next();
-});
+
 
 app.use(expressWinston.logger({
 	transports: [new winston.transports.Console({

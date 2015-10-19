@@ -1,13 +1,9 @@
 var _ = require("lodash");
-var modules = {
-	"music": {
-		"path": "music"
-	},
-	"spotify": {
-		"path": "music/spotify",
-		"require": [{module: "music", version: "0.1"}]
-	}
-}
+var modulesNames = require("../data/public/config").modules || [];
+var modules = {};
+_.forEach(modulesNames, function(m) {
+	modules[m] = require(m+ "/server/config");
+});
 /*
 
 	"music_p1": {
@@ -34,11 +30,12 @@ var setModule = function(module, moduleName) {
 	}
 	try {
 		checkConfig(module, moduleName);
-		var mod = require("./" + moduleName);
+		var mod = require(moduleName + "/server");
 		if (typeof mod.link === "function") {
-			mod.link();
+			mod.link(this);
 		}
 		module.module = mod;
+		console.log(moduleName + " loaded");
 	} catch(e) {
 		console.log(e);
 		module = {error: e};

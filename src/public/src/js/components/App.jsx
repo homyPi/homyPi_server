@@ -3,9 +3,9 @@ import {Link, Navigation} from 'react-router';
 import UserAPI from "../apis/UserAPI.jsx"
 
 import AppHeader from './AppHeader.jsx'
-import Player from './Player.jsx';
+//import Player from './Player.jsx';
 import Io from "../io.jsx";
-
+window.io = Io;
 
 export default React.createClass({
    mixins : [Navigation],
@@ -32,7 +32,7 @@ export default React.createClass({
             this.props.children || defaultPage
           }
         </div>
-        <Player/>
+        {/*<Player/>*/}
       </div>
     );
   }

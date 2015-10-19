@@ -1,0 +1,3 @@
+{
+	"modules": ["homyPi-server-music", "homyPi-server-spotify"]
+}

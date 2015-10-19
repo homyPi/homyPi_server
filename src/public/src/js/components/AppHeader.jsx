@@ -1,15 +1,16 @@
 import React from 'react';
 import {AppBar, LeftNav, MenuItem} from "material-ui";
-
+import ModuleManager from "../ModuleManager.jsx";
 class AppHeader extends React.Component {
 	render() {
 		let menuItems = [
 		  { route: '/app/sink', text: 'Alarms' },
-		  { type: MenuItem.Types.SUBHEADER, text: 'Music' },
-		  { route: '/app/music/search', text: 'Search Music' },
-		  { type: MenuItem.Types.SUBHEADER, text: 'Settings' },
-		  { route: "/app/music/artists/me", text: "my artists"}
+		  { type: MenuItem.Types.SUBHEADER, text: 'Modules' }
 		];
+		ModuleManager.modules.forEach(function(m) {
+			menuItems = menuItems.concat(m.config.menu || []);
+		});
+
 		return (
 			<div>
 				<AppBar
