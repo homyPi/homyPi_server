@@ -35,7 +35,6 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Content-Type");
     next();
 });
-app.use(express.static(path.join(__dirname, './data/public')));
 app.use(express.static(path.join(__dirname, '../public/dist')));
 app.use(express.static(path.join(__dirname, '../../node_modules')));
 app.use(bearerToken());

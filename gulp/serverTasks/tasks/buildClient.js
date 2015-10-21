@@ -1,4 +1,5 @@
 var gulp = require('gulp');
-gulp.task('buildClient', ['browserifyClient', 'styles', 'html'], function() {
+var modules = require("../../clientTasks/tasks/modules");
+gulp.task('buildClient', ['modules', 'browserifyClient', 'styles', 'html'], function() {
 	process.exit();
 });

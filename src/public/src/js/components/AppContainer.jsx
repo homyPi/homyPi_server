@@ -3,8 +3,8 @@ import { Router, Route, DefaultRoute} from 'react-router';
 import {AppCanvas, RaisedButton, Styles} from 'material-ui';
 import injectTapEventPlugin from "react-tap-event-plugin";
 injectTapEventPlugin();
-
-const ThemeManager = new Styles.ThemeManager();
+const theme = require('./theme');
+const ThemeManager = Styles.ThemeManager;
 
 import Home from './Home.jsx';
 import App from './App.jsx';
@@ -22,14 +22,15 @@ function requireAuth(nextState, redirectTo) {
 
 
 export default React.createClass({
-	propTypes: {},
-
+	propTypes: {
+    muiTheme: React.PropTypes.object
+  },
   childContextTypes: {
     muiTheme: React.PropTypes.object
   },
   getChildContext() {
     return {
-      muiTheme: ThemeManager.getCurrentTheme()
+      muiTheme: ThemeManager.getMuiTheme(theme)
     };
   },
   render() {

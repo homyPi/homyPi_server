@@ -7,8 +7,9 @@ module.exports = function(app, router) {
 	var router = express.Router();
 	_.forEach(modulesManager.getAll(), function(module, key) {
 		console.log(module.path)
-		if (module.path && typeof module.module.routes === "function") {
+		if (module.path && module.module && typeof module.module.routes === "function") {
 			var modRouter = module.module.routes(app, express.Router());
+			console.log("settings routes /api/modules/" + module.path + "*");
 			router.use("/" + module.path, modRouter);
 		}
 	});

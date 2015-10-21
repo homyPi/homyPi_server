@@ -4,22 +4,6 @@ var modules = {};
 _.forEach(modulesNames, function(m) {
 	modules[m] = require(m+ "/server/config");
 });
-/*
-
-	"music_p1": {
-		"path": "music/p1"
-	}
- 
-,
-	"music_p2": {
-		"path": "music/p2",
-		"require": "music",
-		"links": [{module: "music", version: "0.1"}]
-	},
-	"alarm": {
-		"require": [{module: "music", version: "0.1"}]
-	}
- */
 
 var setModule = function(module, moduleName) {
 	if(module.module) {
@@ -64,6 +48,14 @@ module.exports = {
 	load: function() {
 		_.forEach(modules, function(module, key) {
 			setModule(module, key);
+		});
+	},
+	setUpSocket: function(socket) {
+		_.forEach(modules, function(module, key) {
+			if(module.module && typeof module.module.setSocket === "function") {
+				console.log("setting socket for " + key);
+				module.module.setSocket(socket);
+			}
 		});
 	},
 	get: function(moduleName) {

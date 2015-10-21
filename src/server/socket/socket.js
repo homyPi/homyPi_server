@@ -5,9 +5,9 @@ var socketioJwt = require("socketio-jwt");
 var config = require(__base + "data/private/config.js");
 
 var alarmSocket = require("./alarmSocket");
-var playerSocket = require("./playerSocket");
 var raspberrySocket = require("./raspberrySocket");
 
+var ModuleManager = require("../modules/ModuleManager");
 var Raspberry  = require(__base + "models/Raspberry");
 
 var IO = function() {};
@@ -33,8 +33,9 @@ IO.init = function(server) {
 			socket.emit("ping:received");
 		});
 		alarmSocket(socket);
-		playerSocket(socket);
 		raspberrySocket(socket);
+		
+		ModuleManager.setUpSocket(socket);
 		socket.on('disconnect', function(){
 			if (socket.decoded_token.isRaspberry) {
 				console.log("it's a pie!!");

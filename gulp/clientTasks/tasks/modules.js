@@ -11,9 +11,9 @@ var havePublicModule = function(module) {
 		return true;
 	} catch (e) {
 		if (e.code === "MODULE_NOT_FOUND") {
+			console.log("module: " + module, e);
 			return false;
 		}
-		console.log(e);
 		return true;
 	}
 }

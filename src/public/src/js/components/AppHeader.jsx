@@ -32,7 +32,7 @@ class AppHeader extends React.Component {
 }
 AppHeader.defaultProps = {}
 AppHeader.contextTypes = {
-  history: React.PropTypes.func
+  history: React.PropTypes.object
 };
 export default AppHeader;
 
