@@ -41,9 +41,7 @@
     "react-addons-pure-render-mixin": "^0.14.0",
     "react-router": "^1.0.0-rc1",
     "reactify": "^1.1.1",
-    "socket.io-client": "^1.3.6",
-    "homyPi-server-music": "../homyPi_plugins/music",
-    "homyPi-server-alarm": "../homyPi_plugins/alarm"
+    "socket.io-client": "^1.3.6"
   },
   "devDependencies": {
     "babel": "^5.8.23",
