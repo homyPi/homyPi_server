@@ -2,10 +2,13 @@ import React, {PropTypes} from 'react';
 import {Link, History} from 'react-router';
 import UserAPI from "../apis/UserAPI.jsx";
 
+import ModuleManager from '../ModuleManager.jsx';
+
 import AppHeader from './AppHeader.jsx'
 //import Player from './Player.jsx';
 import Io from "../io.jsx";
 window.io = Io;
+
 
 export default React.createClass({
   mixins : [History],
@@ -32,7 +35,11 @@ export default React.createClass({
             this.props.children || defaultPage
           }
         </div>
-        {/*<Player/>*/}
+        <div>
+          { 
+            ModuleManager.getFooter()
+          }
+        </div>
       </div>
     );
   }
