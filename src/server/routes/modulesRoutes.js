@@ -9,7 +9,7 @@ module.exports = function(app, router) {
 		console.log(module.path)
 		if (module.path && module.module && typeof module.module.routes === "function") {
 			var modRouter = module.module.routes(app, express.Router());
-			console.log("settings routes /api/modules/" + module.path + "*");
+			console.log("settings routes /api/modules/" + module.path + "/*");
 			router.use("/" + module.path, modRouter);
 		}
 	});

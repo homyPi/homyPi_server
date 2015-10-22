@@ -46,7 +46,9 @@ var checkConfig = function(module, name) {
 }
 module.exports = {
 	load: function() {
+		console.log("Loading modules");
 		_.forEach(modules, function(module, key) {
+			console.log("setting module: " + key);
 			setModule(module, key);
 		});
 	},

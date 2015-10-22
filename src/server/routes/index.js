@@ -1,6 +1,5 @@
 var musicGraphRoutes = require("./musicGraphRoutes");
 var userRoutes = require("./userRoutes");
-var alarmRoutes = require("./alarmRoutes");
 //var gracenoteRoutes = require("./gracenoteRoutes");
 var raspberryRoutes = require("./raspberryRoutes");
 
@@ -14,7 +13,7 @@ module.exports = function(app) {
 	});
 	musicGraphRoutes(app);
 	userRoutes(app);
-	alarmRoutes(app);
+	//alarmRoutes(app);
 	//gracenoteRoutes(app);
 	raspberryRoutes(app);
 

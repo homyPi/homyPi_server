@@ -4,7 +4,6 @@
 var socketioJwt = require("socketio-jwt");
 var config = require(__base + "data/private/config.js");
 
-var alarmSocket = require("./alarmSocket");
 var raspberrySocket = require("./raspberrySocket");
 
 var ModuleManager = require("../modules/ModuleManager");
@@ -32,7 +31,6 @@ IO.init = function(server) {
 		socket.on('ping', function(){
 			socket.emit("ping:received");
 		});
-		alarmSocket(socket);
 		raspberrySocket(socket);
 		
 		ModuleManager.setUpSocket(socket);
