@@ -57,5 +57,8 @@ module.exports = {
 		} else {
 			res.json({err: "unknown loginCallback function"});
 		}
+	},
+	getServices: function() {
+		return ServiceManager.services;
 	}
 }

@@ -9,6 +9,12 @@ class AppHeader extends React.Component {
 		ModuleManager.modules.forEach(function(m) {
 			menuItems = menuItems.concat(m.config.menu || []);
 		});
+		menuItems.concat(
+			[
+				{ type: MenuItem.Types.SUBHEADER, text: 'Settings' },
+				{ route: '/app/services', text: 'Services' }
+			]
+			)
 
 		return (
 			<div>
