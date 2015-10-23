@@ -1,10 +1,22 @@
 var _ = require("lodash");
+var Toposort = require('toposort-class'),
+    t = new Toposort();
 var modulesNames = require("../data/public/config").modules || [];
+var AuthManager = require("./AuthManager");
 var modules = {};
-_.forEach(modulesNames, function(m) {
-	modules[m] = require(m+ "/server/config");
-});
+var order = [];
 
+_.forEach(modulesNames, function(m) {
+	var mGraph = [];
+	modules[m] = require(m+ "/server/config");
+	if(modules[m].require) {
+		modules[m].require.every(function(dep) {
+			mGraph.push(dep.module);
+		});
+	}
+	t.add(m, mGraph);
+});
+order = t.sort().reverse();
 var setModule = function(module, moduleName) {
 	if(module.module) {
 		return true;
@@ -19,7 +31,6 @@ var setModule = function(module, moduleName) {
 			mod.link(this);
 		}
 		module.module = mod;
-		console.log(moduleName + " loaded");
 	} catch(e) {
 		console.log(e);
 		module = {error: e};
@@ -27,30 +38,21 @@ var setModule = function(module, moduleName) {
 	}
 }
 
-var hasRequirement = function(require) {
-	return require.every(function(moduleInfo) {
-		if(!modules[moduleInfo.module]) {
-			return false;
-		}
-		return setModule(modules[moduleInfo.module],
-			moduleInfo.module);
-	});
-}
 var checkConfig = function(module, name) {
-	if(module.require) {
-		if(!hasRequirement(module.require)) {
-			return false;
-		}
+	if(typeof module.getServices === "function") {
+		AuthManager.addServices(module.getServices());
 	}
 	return true;
 }
+var executeSorted = function(fn) {
+		for(var i = 0; i < order.length; i++) {
+			console.log(order[i]);
+			fn(modules[order[i]], order[i]);
+		}
+	}
 module.exports = {
 	load: function() {
-		console.log("Loading modules");
-		_.forEach(modules, function(module, key) {
-			console.log("setting module: " + key);
-			setModule(module, key);
-		});
+		executeSorted(setModule);
 	},
 	setUpSocket: function(socket) {
 		_.forEach(modules, function(module, key) {
@@ -70,5 +72,6 @@ module.exports = {
 	},
 	getAll: function() {
 		return modules;
-	}
+	},
+	executeSorted: executeSorted
 }

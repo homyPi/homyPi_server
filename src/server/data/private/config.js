@@ -21,7 +21,7 @@ module.exports = {
     "spotify_config": {
         "client_id": process.env.HOMYPI_SPOTIFY_CLIENT_ID,
         "client_secret": process.env.HOMYPI_SPOTIFY_CLIENT_SECRET,
-        "redirect_url": "/api/spotify/oauth2callback",
+        "redirect_url": process.env.HOMYPI_SPOTIFY_REDIRECT_URL,
         "response_type": "code",
         "scope": "playlist-read-private+streaming+user-read-email+user-library-read"
     },
