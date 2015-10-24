@@ -46,6 +46,30 @@ var isLoggedIn = function(req, res, next) {
 var getMe = function(req, res) {
 	res.json({user: req.user});
 };
+
+var editPassword = function(req, res) {
+	userModel.findOne({_id: req.user._id}, function(err, userInfo) {
+		if (!userInfo) {
+			return res.json({error: "invalid"});
+		} else {
+			if (req.body.oldPassword !== userInfo.password) {
+				return res.json({error: "invalid password"});
+			}
+			if (req.body.newPassword !== req.body.confirmNewPassword) {
+				return res.json({error: "invalid new password"});
+			} else {
+				userInfo.password = req.body.newPassword;
+				userInfo.save(function(err) {
+					if(err) {
+						res.json({err: err});
+					} else {
+						res.json({status: "OK"});
+					}
+				});
+			}
+		}
+	});
+}
 /*
 var myArtists = function(req, res) {
 	options = {
@@ -69,6 +93,5 @@ module.exports = {
 	login: login,
 	isLoggedIn: isLoggedIn,
 	me: getMe,
-
-//	myArtists: myArtists
+	editPassword: editPassword
 };

@@ -19,7 +19,9 @@ var getToken = function() {
 		return token;
 	}
 };
-
+var setHeaders = function(xhr) {
+	xhr.setRequestHeader ("Authorization", "Bearer " + getToken());
+}
 
 export default {
 	getToken: getToken,
@@ -45,5 +47,33 @@ export default {
 					}
 				});
 			});
+	},
+	updatePassword(old, newPassword, confirm)  {
+		return new Promise(function(resolve, reject) {
+			$.ajax({
+				url: serverUrl + "/api/users/me/password",
+				type: "POST",
+			    data: JSON.stringify({ 
+			    	oldPassword: old,
+			    	newPassword: newPassword,
+			    	confirmNewPassword: confirm 
+			    }),
+			    beforeSend: setHeaders,
+				contentType: "application/json; charset=utf-8",
+			    dataType: "json",
+				success: function(resp) {
+					console.log(resp);
+					if (resp.error) {
+						return reject(resp);
+					} else {
+						console.log(resp)
+						return resolve(resp);
+					}
+				},
+				fail: function(err) {
+					reject(err)
+				}
+			});
+		});
 	}
 };

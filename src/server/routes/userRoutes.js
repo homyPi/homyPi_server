@@ -9,6 +9,7 @@ module.exports = function(app) {
 	app.get('/api/users/login/services/:name/callback', UserMiddleware.isLoggedIn, ServicesManager.loginCallback);
 
 	app.get('/api/users/me', UserMiddleware.isLoggedIn, UserMiddleware.me);
+	app.post('/api/users/me/password', UserMiddleware.isLoggedIn, UserMiddleware.editPassword);
 
 	//app.get('/api/users/me/artists', UserMiddleware.isLoggedIn, UserMiddleware.myArtists);
 };

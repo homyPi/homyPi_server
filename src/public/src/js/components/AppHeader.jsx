@@ -1,13 +1,18 @@
 import React from 'react';
 import {AppBar, LeftNav, MenuItem} from "material-ui";
 import ModuleManager from "../ModuleManager.jsx";
+
+var capFirst = function(str) {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 class AppHeader extends React.Component {
 	render() {
 		let menuItems = [];
 		ModuleManager.modules.forEach(function(m) {
 			if (m.config.menu && m.config.menu.length) {
 				if(m.config.name) {
-					menuItems.push({ type: MenuItem.Types.SUBHEADER, text: m.config.name })
+					menuItems.push({ type: MenuItem.Types.SUBHEADER, text: capFirst(m.config.name) })
 				}
 				menuItems = menuItems.concat(m.config.menu);
 			}
@@ -15,6 +20,7 @@ class AppHeader extends React.Component {
 		menuItems = menuItems.concat(
 			[
 				{ type: MenuItem.Types.SUBHEADER, text: 'Settings' },
+				{ route: '/app/users/me', text: 'My account' },
 				{ route: '/app/services', text: 'Services' }
 			]
 			)
