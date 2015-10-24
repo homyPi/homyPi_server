@@ -4,23 +4,26 @@ import {RaisedButton} from 'material-ui';
 let styles = {
 	container: {
 		display: "flex",
-		"flex-direction": "row",
-		"align-items": "center",
-		"width": "90%"
+		"flexDirection": "row",
+		"alignItems": "center",
+		"width": "90%",
+		"height": "50px"
 	},
 	accountStatus: {
 		"display": "flex",
-		"flex-direction": "row",
-		"align-items": "center",
+		"flexDirection": "row",
+		"alignItems": "center",
 		"width": "60%"
 	},
 	serviceName: {
-		"font-size": "16px",
-		"width": "20%"
+		"fontSize": "16px",
+		"width": "20%",
+		"marginBottom": "0px"
 	},
 	accountInfo: {
-		"font-size": "14px",
-		"width": "60%"
+		"fontSize": "14px",
+		"width": "60%",
+		"marginBottom": "0px"
 	}
 }
 export default React.createClass({
@@ -49,7 +52,7 @@ export default React.createClass({
 					{service.name}
 				</p>
 				{
-					(service.loggedIn) ? this.getLoggedIn() : this.getNotLoggedIn()
+					(service.isLoggedIn) ? this.getLoggedIn() : this.getNotLoggedIn()
 				}
 			</div>
 		)

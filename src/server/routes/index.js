@@ -4,6 +4,7 @@ var userRoutes = require("./userRoutes");
 var raspberryRoutes = require("./raspberryRoutes");
 
 var modulesRoutes = require("./modulesRoutes");
+var servicesRoutes = require("./servicesRoutes");
 
 module.exports = function(app) {
 
@@ -19,4 +20,5 @@ module.exports = function(app) {
 
 
 	modulesRoutes(app);
+	servicesRoutes(app);
 };

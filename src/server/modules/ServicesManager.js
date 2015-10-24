@@ -1,5 +1,6 @@
 var ModuleManager = require("./ModuleManager.js");
 var _ = require("lodash");
+var Promise = require("bluebird");
 
 var ServiceManager = function() {};
 ServiceManager.services = [];
@@ -60,5 +61,27 @@ module.exports = {
 	},
 	getServices: function() {
 		return ServiceManager.services;
+	},
+	getServicesInfo: function(user) {
+		return new Promise(function(resolve, reject) {
+			var promises = [];
+			var data = ServiceManager.services.map(function(s) {
+				if (s && s.auth && typeof s.auth.isLoggedIn === "function") {
+					promises.push(s.auth.isLoggedIn(user));
+					return {name: s.name};
+				}
+			});
+			Promise.all(promises).then(function(results) {
+				for(var i = 0; i < data.length; i++) {
+					if (!results[i]) {
+						data[i].isLoggedIn = false;
+					} else {
+						data[i].isLoggedIn = true;
+						data[i].user = results[i].id;
+					}
+				}
+				return resolve(data);
+			}).catch(reject);
+		});
 	}
 }

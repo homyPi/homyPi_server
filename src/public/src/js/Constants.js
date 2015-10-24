@@ -14,17 +14,6 @@ export default {
     SET_ARTIST: null,
     SET_MY_ARTISTS: null
   }),
-  MusicSearchActionTypes: keyMirror({
-    SET_RESULTS: null
-  }),
-  PlaylistActionTypes: keyMirror({
-    SET_PLAYLIST: null,
-    ADD_TRACK: null,
-    ADD_TRACKSET: null,
-    REMOVE_TRACK: null,
-    UPDATE_PLAYING_ID: null,
-    UPDATE_PROGRESS: null
-  }),
   UserActionTypes: keyMirror({
     LOGIN_SUCCESS: null
   }),
@@ -33,6 +22,10 @@ export default {
     UPDATE_STATUS: null,
     NEW: null,
     REMOVE: null
+  }),
+
+  ServiceActionTypes: keyMirror({
+    SET_LIST: null
   }),
 
   ActionSources: keyMirror({

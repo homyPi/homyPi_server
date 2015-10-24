@@ -20,7 +20,6 @@ var schema = require('./models/mongoose/mongoose-schema.js')();
 var models = require('./models/mongoose/mongoose-models.js');
 var connection = require('./models/mongoose/mongoose-connection')();
 ModuleManager.load();
-require("./modules/AuthManager");
 var winston = require('winston');
 var expressWinston = require('express-winston');
 var bodyParser = require('body-parser');

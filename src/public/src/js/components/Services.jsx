@@ -1,32 +1,36 @@
 import React from 'react';
 import Service from './Service.jsx';
 
+import ServiceStore from '../stores/ServiceStore.jsx';
+import ServiceActionCreators from '../actions/ServiceActionCreator.jsx';
+
 
 let styles = {
 	list: {
 		display: "flex",
-		"flex-direction": "column"
+		"flexDirection": "column"
 	}
 }
 
 export default React.createClass({
-
-	render: function() {
-		let servicesTests = [
-	{
-		name: "spotify",
-		loggedIn: true,
-		user: "some.mail@thing.com"
+	_onServicesChange: function() {
+		this.setState({services: ServiceStore.getAll().services});
 	},
-	{
-		name: "another",
-		loggedIn: false,
-	}
-];
+	getInitialState: function() {
+		ServiceActionCreators.getAll();
+		return {
+			services: ServiceStore.getAll().services
+		}
+	},
+	componentDidMount: function() {
+	    ServiceStore.addChangeListener(this._onServicesChange);
+	},
+	render: function() {
+		let {services} = this.state;
 		return (
 			<div style={styles.list}>
 				{
-					servicesTests.map(function(service) {
+					services.map(function(service) {
 						return (<Service key={service.name} service={service} />);
 					})
 				}

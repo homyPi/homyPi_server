@@ -1,12 +1,12 @@
 module.exports = function(app) {
 	var UserMiddleware = require(__base + "middleware/user");
-	var AuthManager = require(__base + "modules/AuthManager");
+	var ServicesManager = require(__base + "modules/ServicesManager");
 
 	
 	app.post('/api/users/login', UserMiddleware.login);
 	
-	app.get('/api/users/login/services/:name', UserMiddleware.isLoggedIn, AuthManager.login);
-	app.get('/api/users/login/services/:name/callback', UserMiddleware.isLoggedIn, AuthManager.loginCallback);
+	app.get('/api/users/login/services/:name', UserMiddleware.isLoggedIn, ServicesManager.login);
+	app.get('/api/users/login/services/:name/callback', UserMiddleware.isLoggedIn, ServicesManager.loginCallback);
 
 	app.get('/api/users/me', UserMiddleware.isLoggedIn, UserMiddleware.me);
 

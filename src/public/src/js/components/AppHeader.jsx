@@ -3,13 +3,16 @@ import {AppBar, LeftNav, MenuItem} from "material-ui";
 import ModuleManager from "../ModuleManager.jsx";
 class AppHeader extends React.Component {
 	render() {
-		let menuItems = [
-		  { type: MenuItem.Types.SUBHEADER, text: 'Modules' }
-		];
+		let menuItems = [];
 		ModuleManager.modules.forEach(function(m) {
-			menuItems = menuItems.concat(m.config.menu || []);
+			if (m.config.menu && m.config.menu.length) {
+				if(m.config.name) {
+					menuItems.push({ type: MenuItem.Types.SUBHEADER, text: m.config.name })
+				}
+				menuItems = menuItems.concat(m.config.menu);
+			}
 		});
-		menuItems.concat(
+		menuItems = menuItems.concat(
 			[
 				{ type: MenuItem.Types.SUBHEADER, text: 'Settings' },
 				{ route: '/app/services', text: 'Services' }

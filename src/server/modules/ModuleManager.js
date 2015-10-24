@@ -2,7 +2,7 @@ var _ = require("lodash");
 var Toposort = require('toposort-class'),
     t = new Toposort();
 var modulesNames = require("../data/public/config").modules || [];
-var AuthManager = require("./AuthManager");
+var ServicesManager = require("./ServicesManager");
 var modules = {};
 var order = [];
 
@@ -40,7 +40,7 @@ var setModule = function(module, moduleName) {
 
 var checkConfig = function(module, name) {
 	if(typeof module.getServices === "function") {
-		AuthManager.addServices(module.getServices());
+		ServicesManager.addServices(module.getServices());
 	}
 	return true;
 }

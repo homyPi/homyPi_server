@@ -1,8 +1,12 @@
-var AuthManager = require(__base + "modules/AuthManager")
+var ServicesManager = require(__base + "modules/ServicesManager")
 
 var getAll = function(req, res) {
-	var services = AuthManager.getServices();
-	res.json({})
+	ServicesManager.getServicesInfo(req.user).then(function(data) {
+		res.json(data);
+	}).catch(function(err) {
+		console.log(err);
+		res.json({err: err});
+	});
 };
 
 module.exports = {
