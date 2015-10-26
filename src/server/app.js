@@ -28,15 +28,18 @@ var config = require("./data/private/config.js");
 var jwt = require("jwt-simple");
 var path = require("path");
 
+var userModel = require(__base + "models/mongoose/mongoose-models").User;
+
 var app = express();
 
 
 
 var server = require('http').createServer(app);
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Content-Type");
+  	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
+  	res.header("Access-Control-Allow-Origin", "*");
+  	res.header("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Content-Type");
+  	res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
     next();
 });
 app.use(express.static(path.join(__dirname, '../public/dist')));
@@ -45,12 +48,18 @@ app.use(bearerToken());
 app.use(bodyParser());
 app.use(function(req, res, next) {
 	req.user = null;
+	var user = null;
 	try {
-		req.user = jwt.decode(req.token, config.jwtSecret);
-		return next();
+		user = jwt.decode(req.token, config.jwtSecret);
 	} catch(e) {
 		return next();
 	}
+	console.log("get user");
+	userModel.findOne({username: user.username}, function(err, userInfo) {
+		console.log("got user");
+		req.user = userInfo;
+		return next();
+	});
 });
 
 
@@ -73,7 +82,7 @@ var socket = require("./socket/socket");
 
 routes(app);
 app.get('*', function(req, res, next) {
-  var err = new Error();
+  var err = {};
   err.status = 404;
   next(err);
 });

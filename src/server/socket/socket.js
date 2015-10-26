@@ -13,7 +13,7 @@ var IO = function() {};
 
 IO.init = function(server) {
 	console.log("initializing socket.io");
-	IO.io = require('socket.io')(server);
+	IO.io = require('socket.io')(server, {origins:'*:*'});
 	IO.io.use(socketioJwt.authorize({
 		secret: config.jwtSecret,
 		handshake: true

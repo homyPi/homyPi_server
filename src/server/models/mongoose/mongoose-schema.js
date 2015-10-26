@@ -2,6 +2,7 @@
 /*global require*/
 
 var mongoose = require("mongoose"),
+	_   = require('lodash'),
 	bcrypt   = require('bcrypt-nodejs');
 var ModuleManager = require("../../modules/ModuleManager");
 module.exports = function () {
@@ -28,8 +29,7 @@ module.exports = function () {
 			user: {
 				username: String,
 				password: String,
-				tokens: {
-					
+				externals: {
 				}
 			},
 			raspberry: {
@@ -40,10 +40,29 @@ module.exports = function () {
 		};
 
 	ModuleManager.executeSorted(function(module) {
-		if(module.setSchemaDescriptions) {
-			module.setSchemaDescriptions(schemaDescriptions);
+		if (module.schemas) {
+			_.forEach(module.schemas, function(schema, name) {
+				if (schemaDescriptions[name]) {
+					console.log(name + " already defined");
+				} else {
+					schemaDescriptions[name] = schema;
+				}
+			});
+		}
+		if(module.externals) {
+			for(var i = 0; i < module.externals.length; i++) {
+				var ext = module.externals[i];
+				if (schemaDescriptions[ext.baseSchema] && schemaDescriptions[ext.baseSchema].externals) {
+					console.log(ext.name);
+					console.log(ext.schema);
+					schemaDescriptions[ext.baseSchema].externals[ext.name] = ext.schema;
+				} else {
+					console.log("unknown schema " + ext.baseSchema + " or no externals");
+				}
+			}
 		}
 	});
+	console.log(JSON.stringify(schemaDescriptions.user, null, 2));
 	var userSchema = new Schema(schemaDescriptions.user);
 	userSchema.methods.generateHash = function (password) {
 		return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

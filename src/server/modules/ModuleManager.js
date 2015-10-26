@@ -33,6 +33,7 @@ var setModule = function(module, moduleName) {
 		module.module = mod;
 	} catch(e) {
 		console.log(e);
+		console.log(e.stack);
 		module = {error: e};
 		return false;
 	}
