@@ -6,6 +6,7 @@ module.exports = {
     },
     "google_config" : {
         "CLIENT_ID" : process.env.HOMYPI_GOOGLE_CLIENT_ID,
+        "HOMYPI_GOOGLE_PROJECT_NUMBER" : process.env.HOMYPI_GOOGLE_PROJECT_NUMBER,
         "CLIENT_SECRET" : process.env.HOMYPI_GOOGLE_CLIENT_SECRET,
         "REDIRECT_URL" : process.env.HOMYPI_GOOGLE_REDIRECT_URL,
         "SERVER_KEY": process.env.HOMYPI_GOOGLE_SERVER_KEY

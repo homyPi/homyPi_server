@@ -1,3 +1,3 @@
 {
-	"modules": ["homyPi-server-alarm", "homyPi-server-music", "homyPi-server-spotify"]
+	"modules": ["homyPi-server-alarm", "homyPi-server-music", "homyPi-server-spotify", "homyPi-server-musicgraph"]
 }

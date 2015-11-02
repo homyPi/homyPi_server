@@ -35,6 +35,7 @@ IO.init = function(server) {
 		
 		ModuleManager.setUpSocket(socket);
 		socket.on('disconnect', function(){
+			console.log("client disconnected");
 			if (socket.decoded_token.isRaspberry) {
 				console.log("it's a pie!!");
 				for(var i = 0; i < Raspberry.connectedClients.length; i++) {

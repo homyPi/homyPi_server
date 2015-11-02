@@ -26,13 +26,13 @@ module.exports = function () {
 				refresh_token: String,
 				user: Schema.Types.Mixed
 			},
-			user: {
+			User: {
 				username: String,
 				password: String,
 				externals: {
 				}
 			},
-			raspberry: {
+			Raspberry: {
 				socketId: String,
 				name: String,
 				ip: String
@@ -72,16 +72,21 @@ module.exports = function () {
 	userSchema.methods.validPassword = function (password) {
 		return bcrypt.compareSync(password, this.password);
 	};
-	
-	ModuleManager.executeSorted(function(module) {
-		if(module.setSchemas) {
-			module.setSchemas(schemaDescriptions);
-		}
-	});
+	/*
 	mongoose.model('GToken', new Schema(schemaDescriptions.GToken));
 	mongoose.model('SoundcloudToken', new Schema(schemaDescriptions.SoundcloudToken));
 	mongoose.model('User', userSchema);
 	mongoose.model('Raspberry', new Schema(schemaDescriptions.raspberry));
+	ModuleManager.executeSorted(function(module) {
+		if(module.setSchemas) {
+			module.setSchemas(schemaDescriptions, mongoose);
+		}
+	});
+*/
+	_.forEach(schemaDescriptions, function(schema, name) {
+		console.log("set " + name);
+mongoose.model(name, new Schema(schema));
+	});
 	process.env.schemaLoaded = true;
 	return Schema;
 };
