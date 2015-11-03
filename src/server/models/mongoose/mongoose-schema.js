@@ -85,7 +85,7 @@ module.exports = function () {
 */
 	_.forEach(schemaDescriptions, function(schema, name) {
 		console.log("set " + name);
-mongoose.model(name, new Schema(schema));
+		mongoose.model(name, new Schema(schema));
 	});
 	process.env.schemaLoaded = true;
 	return Schema;
