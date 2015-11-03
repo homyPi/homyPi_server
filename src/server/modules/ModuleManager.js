@@ -6,6 +6,12 @@ var ServicesManager = require("./ServicesManager");
 var modules = {};
 var order = [];
 
+var Raspberry;
+var UserMiddleware;
+var MongooseModels;
+
+var config = require("../data/private/config");
+
 _.forEach(modulesNames, function(m) {
 	var mGraph = [];
 	modules[m] = require(m+ "/server/config");
@@ -17,6 +23,16 @@ _.forEach(modulesNames, function(m) {
 	t.add(m, mGraph);
 });
 order = t.sort().reverse();
+ModuleManager = function() {};
+ModuleManager.get = function(moduleName) {
+	if (modules[moduleName] && modules[moduleName].module) {
+		return modules[moduleName].module;
+	}
+	var err = new Error("Cannot find module '" + moduleName + "'");
+	err.code = 'MODULE_NOT_FOUND';
+	throw err;
+}
+
 var setModule = function(module, moduleName) {
 	if(module.module) {
 		return true;
@@ -24,11 +40,17 @@ var setModule = function(module, moduleName) {
 	if(module.error) {
 		return false;
 	}
+	
 	try {
-		checkConfig(module, moduleName);
+		
+		console.log("hey");
+		//checkConfig(module, moduleName);
 		var mod = require(moduleName + "/server");
 		if (typeof mod.link === "function") {
-			mod.link(this);
+			mod.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
+		}
+		if(typeof module.getServices === "function") {
+			ServicesManager.addServices(module.getServices());
 		}
 		module.module = mod;
 	} catch(e) {
@@ -39,12 +61,6 @@ var setModule = function(module, moduleName) {
 	}
 }
 
-var checkConfig = function(module, name) {
-	if(typeof module.getServices === "function") {
-		ServicesManager.addServices(module.getServices());
-	}
-	return true;
-}
 var executeSorted = function(fn) {
 		for(var i = 0; i < order.length; i++) {
 			console.log(order[i]);
@@ -53,6 +69,10 @@ var executeSorted = function(fn) {
 	}
 module.exports = {
 	load: function() {
+		Raspberry = require("../models/Raspberry");
+		UserMiddleware = require("../middleware/user");
+		MongooseModels = require("../models/mongoose/mongoose-models");
+
 		executeSorted(setModule);
 	},
 	setUpSocket: function(socket) {
@@ -63,14 +83,7 @@ module.exports = {
 			}
 		});
 	},
-	get: function(moduleName) {
-		if (modules[moduleName] && modules[moduleName].module) {
-			return modules[moduleName].module;
-		}
-		var err = new Error("Cannot find module '" + moduleName + "'");
-		err.code = 'MODULE_NOT_FOUND';
-		throw err;
-	},
+	get: ModuleManager.get,
 	getAll: function() {
 		return modules;
 	},

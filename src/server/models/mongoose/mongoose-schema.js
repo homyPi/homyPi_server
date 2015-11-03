@@ -53,8 +53,6 @@ module.exports = function () {
 			for(var i = 0; i < module.externals.length; i++) {
 				var ext = module.externals[i];
 				if (schemaDescriptions[ext.baseSchema] && schemaDescriptions[ext.baseSchema].externals) {
-					console.log(ext.name);
-					console.log(ext.schema);
 					schemaDescriptions[ext.baseSchema].externals[ext.name] = ext.schema;
 				} else {
 					console.log("unknown schema " + ext.baseSchema + " or no externals");
@@ -62,7 +60,6 @@ module.exports = function () {
 			}
 		}
 	});
-	console.log(JSON.stringify(schemaDescriptions.user, null, 2));
 	var userSchema = new Schema(schemaDescriptions.user);
 	userSchema.methods.generateHash = function (password) {
 		return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
@@ -72,17 +69,6 @@ module.exports = function () {
 	userSchema.methods.validPassword = function (password) {
 		return bcrypt.compareSync(password, this.password);
 	};
-	/*
-	mongoose.model('GToken', new Schema(schemaDescriptions.GToken));
-	mongoose.model('SoundcloudToken', new Schema(schemaDescriptions.SoundcloudToken));
-	mongoose.model('User', userSchema);
-	mongoose.model('Raspberry', new Schema(schemaDescriptions.raspberry));
-	ModuleManager.executeSorted(function(module) {
-		if(module.setSchemas) {
-			module.setSchemas(schemaDescriptions, mongoose);
-		}
-	});
-*/
 	_.forEach(schemaDescriptions, function(schema, name) {
 		console.log("set " + name);
 		mongoose.model(name, new Schema(schema));
