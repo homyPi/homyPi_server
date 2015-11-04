@@ -5,6 +5,9 @@ var mongoose = require("mongoose"),
 	_   = require('lodash'),
 	bcrypt   = require('bcrypt-nodejs');
 var ModuleManager = require("../../modules/ModuleManager");
+
+var MongooseModels = require("./mongoose-models");
+
 module.exports = function () {
 	"use strict";
 	if (process.env.schemaLoaded) {
@@ -72,6 +75,7 @@ module.exports = function () {
 	_.forEach(schemaDescriptions, function(schema, name) {
 		console.log("set " + name);
 		mongoose.model(name, new Schema(schema));
+		MongooseModels[name] = mongoose.model(name);
 	});
 	process.env.schemaLoaded = true;
 	return Schema;

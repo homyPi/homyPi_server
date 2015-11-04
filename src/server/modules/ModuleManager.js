@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var Promise = require("bluebird");
 var Toposort = require('toposort-class'),
     t = new Toposort();
 var modulesNames = require("../data/public/config").modules || [];
@@ -34,33 +35,56 @@ ModuleManager.get = function(moduleName) {
 }
 
 var setModule = function(module, moduleName) {
-	if(module.module) {
-		return true;
-	}
-	if(module.error) {
-		return false;
-	}
-	
-	try {
+	return new Promise(function(resolve, reject) {
+		if(module.module) {
+			return resolve()
+		}
+		if(module.error) {
+			return reject(module.error)
+		}
 		
-		console.log("hey");
-		//checkConfig(module, moduleName);
-		var mod = require(moduleName + "/server");
-		if (typeof mod.link === "function") {
-			mod.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
+		try {
+			//checkConfig(module, moduleName);
+			var mod = require(moduleName + "/server");
+			if (typeof mod.link === "function") {
+				mod.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
+			}
+			module.module = mod;
+			if(typeof module.getServices === "function") {
+				ServicesManager.addServices(module.getServices());
+			}
+			if(typeof mod.init === "function") {
+				return mod.init().then(resolve).catch(reject);
+			} else {
+				return resolve();
+			}
+		} catch(e) {
+			console.log(e);
+			console.log(e.stack);
+			module = {error: e};
+			return reject();
 		}
-		if(typeof module.getServices === "function") {
-			ServicesManager.addServices(module.getServices());
-		}
-		module.module = mod;
-	} catch(e) {
-		console.log(e);
-		console.log(e.stack);
-		module = {error: e};
-		return false;
-	}
+	});
 }
-
+var executePromiseSorted = function(fn, i) {
+	return new Promise(function(resolve, reject) {
+		if(typeof i === "undefined") {
+			i = 0;
+		}
+		console.log("execute promise for " + order[i] + "("+i+")");
+		fn(modules[order[i]], order[i])
+			.then(function() {
+				i++;
+				if(i < order.length) {
+					executePromiseSorted(fn, i)
+						.then(resolve)
+						.catch(reject);
+				} else {
+					resolve();
+				}
+			}).catch(reject);
+	});
+}
 var executeSorted = function(fn) {
 		for(var i = 0; i < order.length; i++) {
 			console.log(order[i]);
@@ -69,11 +93,15 @@ var executeSorted = function(fn) {
 	}
 module.exports = {
 	load: function() {
-		Raspberry = require("../models/Raspberry");
-		UserMiddleware = require("../middleware/user");
-		MongooseModels = require("../models/mongoose/mongoose-models");
-
-		executeSorted(setModule);
+		return new Promise(function(resolve, reject) {
+			Raspberry = require("../models/Raspberry");
+			UserMiddleware = require("../middleware/user");
+			MongooseModels = require("../models/mongoose/mongoose-models");
+			executePromiseSorted(setModule)
+				.then(resolve)
+				.catch(reject);
+		});
+		//executeSorted(setModule);
 	},
 	setUpSocket: function(socket) {
 		_.forEach(modules, function(module, key) {
