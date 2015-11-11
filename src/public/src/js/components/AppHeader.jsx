@@ -23,7 +23,12 @@ class AppHeader extends React.Component {
 				{ route: '/app/users/me', text: 'My account' },
 				{ route: '/app/services', text: 'Services' }
 			]
-			)
+			);
+		ModuleManager.modules.forEach(function(m) {
+			if (m.config.settingsRoute) {
+				menuItems.push(m.config.settingsRoute);
+			}
+		});
 
 		return (
 			<div>
