@@ -14,6 +14,7 @@ import Login from './Login.jsx';
 import Services from './Services.jsx';
 import MyAccount from './MyAccount.jsx';
 import ModuleManager from '../ModuleManager.jsx';
+import RaspberriesSettings from "./RaspberriesSettings.jsx"
 
 function requireAuth(nextState, redirectTo) {
   if (!UserAPI.getToken()) {
@@ -42,6 +43,7 @@ export default React.createClass({
 	    <Route path="/app" component={App} onEnter={requireAuth}>
       		<Route name="services" path="services" component={Services} />
           <Route name="my account" path="users/me" component={MyAccount} />
+          <Route name="raspberries" path="settings/raspberries" component={RaspberriesSettings} />
           {modules.map(function(module) {return module.config.routes})}
 	    </Route>
       <Route name="login" path="/login" component={Login} />

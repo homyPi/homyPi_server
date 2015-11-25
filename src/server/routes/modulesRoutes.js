@@ -11,6 +11,8 @@ module.exports = function(app, router) {
 			var modRouter = module.module.routes(app, express.Router());
 			console.log("settings routes /api/modules/" + module.path + "/*");
 			router.use("/" + module.path, modRouter);
+		} else {
+			console.log(JSON.stringify(module.module, null, 2));
 		}
 	});
 	router.use("/", function(req, res) {

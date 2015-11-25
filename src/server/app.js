@@ -19,7 +19,7 @@ var ModuleManager = require("./modules/ModuleManager");
 var schema = require('./models/mongoose/mongoose-schema.js')();
 var models = require('./models/mongoose/mongoose-models.js');
 var connection = require('./models/mongoose/mongoose-connection')();
-ModuleManager.load();
+
 var winston = require('winston');
 var expressWinston = require('express-winston');
 var bodyParser = require('body-parser');
@@ -77,37 +77,38 @@ app.use(expressWinston.logger({
 		return false;
 	} // optional: allows to skip some log messages based on request and/or response
 }));
+ModuleManager.load().then(function() {
+	var socket = require("./socket/socket");
 
-var socket = require("./socket/socket");
+	routes(app);
+	app.get('*', function(req, res, next) {
+	  var err = {};
+	  err.status = 404;
+	  next(err);
+	});
+	 
+	// handling 404 errors
+	app.use(function(err, req, res, next) {
+	  console.error(err.stack);
+	  if(err.status !== 404) {
+	    return next();
+	  }
+	  res.status(404)
+	  res.json(err);
+	});
+	// handling 500 errors
+	app.use(function(err, req, res, next) {
+	  console.error(err.stack);
+	  if(err.status !== 500) {
+	    return next();
+	  }
+	  res.status(500);
+	});
+	process.io = socket.init(server);
 
-routes(app);
-app.get('*', function(req, res, next) {
-  var err = {};
-  err.status = 404;
-  next(err);
-});
- 
-// handling 404 errors
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  if(err.status !== 404) {
-    return next();
-  }
-  res.status(404)
-  res.json(err);
-});
-// handling 500 errors
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  if(err.status !== 500) {
-    return next();
-  }
-  res.status(500);
-});
-process.io = socket.init(server);
-
-server.listen(process.env.PORT || 3000, function () {
-	var host = server.address().address;
-	var port = server.address().port;
-	console.log('Example app listening at http://%s:%s', host, port);
-});
+	server.listen(process.env.PORT || 3000, function () {
+		var host = server.address().address;
+		var port = server.address().port;
+		console.log('Example app listening at http://%s:%s', host, port);
+	});
+})

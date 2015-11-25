@@ -23,9 +23,27 @@ IO.init = function(server) {
 		console.log(socket.decoded_token);
 		if (socket.decoded_token.isRaspberry) {
 			console.log("client is raspberry!!");
-			var rasp = new Raspberry(socket.decoded_token._id, socket.id);
-			Raspberry.connectedClients.push(rasp);
-			socket.broadcast.emit("raspberry:new", {raspberry: rasp.get()});
+			var info = {};
+			try {
+				if (socket.handshake.query &&
+					socket.handshake.query.info)
+					info = JSON.parse(socket.handshake.query.info);
+			} catch(e) {
+				socket.disconnect();
+				return;
+			}
+			Raspberry.start(info.name, info.ip, socket.id)
+				.then(function(raspberry) {
+					socket.raspberryInfo = info;
+					console.log("new raspberry:");
+					console.log(JSON.stringify(raspberry))
+					socket.broadcast.emit("raspberry:new", {raspberry: raspberry});
+				}).catch(function(err) {
+					console.log(err);
+					if (err.code === 404) {
+						socket.disconnect();
+					}
+				});
 
 		}
 		socket.on('ping', function(){
@@ -33,18 +51,17 @@ IO.init = function(server) {
 		});
 		raspberrySocket(socket);
 		
-		ModuleManager.setUpSocket(socket);
+		ModuleManager.setUpSocket(socket, IO.io);
 		socket.on('disconnect', function(){
 			console.log("client disconnected");
 			if (socket.decoded_token.isRaspberry) {
-				console.log("it's a pie!!");
-				for(var i = 0; i < Raspberry.connectedClients.length; i++) {
-					if (socket.id ===  Raspberry.connectedClients[i].socketId) {
-						 Raspberry.connectedClients.splice(i, 1);
-				console.log("'t was a lie!!'");
-						 socket.broadcast.emit("raspberry:remove", {socketId: socket.id});
-					}
-				}
+				Raspberry.stop(socket.raspberryInfo.name)
+				.then(function(raspberry) {
+					console.log(JSON.stringify(raspberry))
+				}).catch(function(err) {
+					console.log(err);
+				});
+				socket.broadcast.emit("raspberry:remove", {name: socket.raspberryInfo.name});
 			}
 		});
 	});

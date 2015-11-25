@@ -1,12 +1,43 @@
 import React from 'react';
-import {AppBar, LeftNav, MenuItem} from "material-ui";
+import {AppBar, Avatar, LeftNav, IconMenu, MenuItem} from "material-ui";
+let HeaderMenuItem = require("material-ui/lib/menus/menu-item");
 import ModuleManager from "../ModuleManager.jsx";
+
+import RaspberryActionCreators from "../actions/RaspberryActionCreators.jsx";
+import RaspberryStore from "../stores/RaspberryStore.jsx";
 
 var capFirst = function(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+var getRaspberryAvatar = function(rasp) {
+	if (!rasp) {
+		return "";
+	}
+	if (rasp.name) {
+		return rasp.name.charAt(0).toUpperCase();
+	}
+	return "U";
+}
+
 class AppHeader extends React.Component {
+	constructor(props) {
+	    super(props);
+	    this.state = {
+	    	raspberries: RaspberryStore.getAll().raspberries,
+	    	selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
+	    };
+	}
+	componentWillMount() {
+		RaspberryActionCreators.getAll();
+		RaspberryStore.addChangeListener(() => { this._onRaspberriesChange() });
+	}
+	_onRaspberriesChange() {
+		this.setState({
+			raspberries: RaspberryStore.getAll().raspberries,
+			selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
+		});
+	}
 	render() {
 		let menuItems = [];
 		ModuleManager.modules.forEach(function(m) {
@@ -21,7 +52,8 @@ class AppHeader extends React.Component {
 			[
 				{ type: MenuItem.Types.SUBHEADER, text: 'Settings' },
 				{ route: '/app/users/me', text: 'My account' },
-				{ route: '/app/services', text: 'Services' }
+				{ route: '/app/services', text: 'Services' },
+				{ route: '/app/settings/raspberries', text: 'Raspberries' }
 			]
 			);
 		ModuleManager.modules.forEach(function(m) {
@@ -34,11 +66,30 @@ class AppHeader extends React.Component {
 			<div>
 				<AppBar
 				  title="HomyPi"
-				  iconClassNameRight="muidocs-icon-navigation-expand-more"
-				  onLeftIconButtonTouchTap={this._showLeftNav.bind(this)} />
+				  onLeftIconButtonTouchTap={() => {this._showLeftNav()}}
+				  iconElementRight={
+				    <IconMenu iconButtonElement={
+				      <Avatar>{
+				      	getRaspberryAvatar(this.state.selectedRaspberry)
+				      }</Avatar>
+				    }>
+				    {this.state.raspberries.map((rasp) => {
+				    	return (
+				    		<HeaderMenuItem 
+				    			key={rasp.id} 
+				    			primaryText={rasp.name} 
+				    			onClick={()=> {this._selectedPi(rasp)}} />
+				    		);
+				    })}  
+				     </IconMenu>
+				} />
 			  	<LeftNav ref="leftNav" docked={false} menuItems={menuItems} onChange={this._onLeftNavChange.bind(this)} />
 			</div>
 		)
+	}
+
+	_selectedPi(pi) {
+		RaspberryActionCreators.setSelectedRaspberry(pi);
 	}
 
 	_showLeftNav() {

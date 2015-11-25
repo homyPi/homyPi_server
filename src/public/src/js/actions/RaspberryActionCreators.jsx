@@ -15,13 +15,6 @@ export default {
 
 			});
 	},
-	updateState(socketId, status) {
-		Dispatcher.handleViewAction({
-			type: Constants.RaspberryActionTypes.UPDATE_STATUS,
-			socketId: socketId,
-			status: status
-      	});
-	},
 	setSelectedRaspberry(raspberry) {
 		Dispatcher.handleViewAction({
 			type: Constants.RaspberryActionTypes.SET_SELECTED,
@@ -39,5 +32,12 @@ export default {
 			type: Constants.RaspberryActionTypes.REMOVE,
 			socketId: socketId
       	});
+	},
+	newModule(data) {
+		Dispatcher.handleViewAction({
+			type: Constants.RaspberryActionTypes.NEW_MODULE,
+			data: data
+      	});
+
 	}
 }

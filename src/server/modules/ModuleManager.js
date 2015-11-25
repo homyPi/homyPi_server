@@ -50,6 +50,7 @@ var setModule = function(module, moduleName) {
 				mod.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
 			}
 			module.module = mod;
+			console.log(moduleName + " LOADED");
 			if(typeof module.getServices === "function") {
 				ServicesManager.addServices(module.getServices());
 			}
@@ -103,11 +104,11 @@ module.exports = {
 		});
 		//executeSorted(setModule);
 	},
-	setUpSocket: function(socket) {
+	setUpSocket: function(socket, io) {
 		_.forEach(modules, function(module, key) {
 			if(module.module && typeof module.module.setSocket === "function") {
 				console.log("setting socket for " + key);
-				module.module.setSocket(socket);
+				module.module.setSocket(socket, io);
 			}
 		});
 	},

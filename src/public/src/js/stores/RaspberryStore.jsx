@@ -3,69 +3,99 @@ import Constants from '../Constants';
 import BaseStore from './BaseStore';
 import assign from 'object-assign';
 
+import ModuleManager from '../ModuleManager.jsx'
+
 // data storage
 let raspberries = [];
 let selected = null;
-let selectedId = null;
+let selectedName = null;
+let selectedKey = null;
+var newRaspberryListeners = [];
+var removeRaspberryListeners = [];
+var onChangeRaspberryListeners = [];
 
 function selectDefault() {
   if (!selected) {
     if (raspberries.length) {
-      selectedId = raspberries[0].socketId;
+      selectedName = raspberries[0].name;
       selected = raspberries[0];
+      selectedKey = 0;
     } else {
       selected = null;
       selectedId = null;
+      selectedKey = null;
     }
   }
 }
 function setRaspberries(list) {
-  raspberries = list;
+  raspberries = [];
+  for(var i = 0; i < list.length; i++) {
+    addRaspberry(list[i]);
+  }
   selectDefault();
 }
 function addRaspberry(rasp) {
-  raspberries.push(rasp);
+  var inList = getRaspberry(rasp.name);
+  if (!inList)
+    raspberries.push(rasp);
 }
-function removeRaspberry(socketId) {
+function removeRaspberry(name) {
   for(var i = 0; i < raspberries.length; i++) {
-    if (raspberries[i].socketId == socketId) {
+    if (raspberries[i].name == name) {
       raspberries.splice(i, 1);
     }
   }
-  if (socketId == selectedId) {
+  if (name == selectedName) {
     selected = null;
-    selectedId = null;
+    selectedName = null;
     selectDefault();
   }
 }
-function updateStatus(socketId, status) {
-  for(var i = 0; i < raspberries.length; i++) {
-    if (raspberries[i].socketId == socketId) {
-      raspberries[i].status = status;
-    }
-  }
-}
+
 function setSelected(raspberry) {
   selected = null;
-  selectedId = raspberry.socketId;
+  selectedName = raspberry.name;
   for(var i = 0; i < raspberries.length; i++) {
-    if (raspberries[i].socketId == selectedId) {
+    if (raspberries[i].name == selectedName) {
       selected = raspberries[i];
+      selectedKey = i;
     }
   }
   if (!selected) {
      selectDefault();
   }
 }
+
+function getRaspberry(name) {
+  for(var i = 0; i < raspberries.length; i++) {
+    if (raspberries[i].name === name) {
+      return raspberries[i];
+    }
+  }
+  return;
+}
+
+function newModule(data) {
+  console.log("newModule", data);
+  console.log("raspberries", raspberries);
+  for(var i = 0; i < raspberries.length; i++) {
+      if (data.socketId ===  raspberries[i].socketId) {
+        raspberries[i].modules = raspberries[i].modules || {};
+        raspberries[i].modules[data.module] = data;
+        console.log("notify change for ", raspberries[i]);
+      }
+  }
+}
+
+
 // Facebook style store creation.
 const RaspberryStore = assign({}, BaseStore, {
   getAll() {
     return {
       raspberries: raspberries,
-      selectedRaspberry: selected
+      selectedRaspberry: raspberries[selectedKey]
     };
   },
-
   dispatcherIndex: Dispatcher.register(function(payload) {
     let action = payload.action;
     switch(action.type) {
@@ -74,14 +104,8 @@ const RaspberryStore = assign({}, BaseStore, {
         setRaspberries(list);
         RaspberryStore.emitChange();
         break;
-      case Constants.RaspberryActionTypes.UPDATE_STATUS:
-        let socketIdUpdated = action.socketId;
-        let status = action.status;
-        updateStatus(socketIdUpdated, status);
-        RaspberryStore.emitChange();
-        break;
       case Constants.RaspberryActionTypes.SET_SELECTED:
-        let selectedRaspberry = action.selectedRaspberry;
+        let selectedRaspberry = action.raspberry;
         setSelected(selectedRaspberry);
         RaspberryStore.emitChange();
         break;
@@ -92,8 +116,12 @@ const RaspberryStore = assign({}, BaseStore, {
         RaspberryStore.emitChange();
         break;
       case Constants.RaspberryActionTypes.REMOVE:
-        let socketIdRemoved = action.socketId;
-        removeRaspberry(socketIdRemoved);
+        let nameRemoved = action.name;
+        removeRaspberry(nameRemoved);
+        RaspberryStore.emitChange();
+        break;
+      case Constants.RaspberryActionTypes.NEW_MODULE:
+        newModule(action.data);
         RaspberryStore.emitChange();
         break;
       default:

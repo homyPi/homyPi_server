@@ -38,7 +38,12 @@ module.exports = function () {
 			Raspberry: {
 				socketId: String,
 				name: String,
-				ip: String
+				ip: String,
+				state: { type: String, enum: ["UP", "STARTING", "DOWN"] },
+				modules: [{
+					name: String,
+					state: { type: String, enum: ["UP", "STARTING", "DOWN"] } 
+				}]
 			}
 		};
 

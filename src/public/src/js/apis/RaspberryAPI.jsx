@@ -7,21 +7,29 @@ var serverUrl = config.server_url || "";
 function setHeaders(xhr) {
     xhr.setRequestHeader ("Authorization", "Bearer " + UserAPI.getToken());
 }
-
+var getAllPromise = null;
 export default {
 	getAll() {
-		return new Promise((resolve, reject) => {
+		if (getAllPromise) return getAllPromise;
+		getAllPromise =  new Promise((resolve, reject) => {
 			$.ajax({
 					url: serverUrl + "/api/raspberries/",
 					type: "GET",
 					beforeSend: setHeaders,
 					success: function(resp) {
-						resolve(resp.raspberries);
+						getAllPromise = null;
+						if (resp.status === "success") {
+							resolve(resp.data.items);
+						} else {
+							reject(resp.error);
+						}
 					},
 					fail: function(err) {
+						getAllPromise = null;
 						reject(err)
 					}
 				});
 		});
+		return getAllPromise;
 	}
 };

@@ -19,7 +19,7 @@
     "jquery": "^2.1.4",
     "jwt-simple": "^0.3.1",
     "lodash": "^3.10.1",
-    "material-ui": "^0.13.0",
+    "material-ui": "^0.13.2",
     "material-ui-sass": "^0.7.5",
     "mongoose": "^4.1.7",
     "node-env-file": "^0.1.7",
@@ -33,7 +33,7 @@
     "react-addons-transition-group": "^0.14.0",
     "react-addons-update": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-router": "^1.0.0-rc1",
+    "react-router": "^1.0.0-rc3",
     "react-tap-event-plugin": "^0.2.0",
     "reactify": "^1.1.1",
     "request": "^2.64.0",
@@ -46,8 +46,8 @@
     "winston": "^1.0.1",
     "homyPi-server-spotify": "git://github.com/homyPi/homyPi-server-spotify.git#master",
     "homyPi-server-alarm": "git://github.com/homyPi/homyPi-server-alarm.git#master",
-    "homyPi-server-music": "git://github.com/homyPi/homyPi-server-music.git#master",
     "homyPi-server-musicgraph": "git://github.com/homyPi/homyPi-server-musicgraph.git#master",
+    "homyPi-server-music": "../homyPi_plugins/music",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-connect": "^2.2.0",
@@ -62,7 +62,8 @@
     "watchify": "^3.4.0",
     "babel": "^5.8.23",
     "babel-eslint": "^4.1.1",
-    "babelify": "^6.3.0"
+    "babelify": "^6.3.0",
+    "history": "^1.12.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",
@@ -98,6 +99,7 @@
   "scripts": {
     "test": "mocha ./src/server/test --timeout 10000 -r ./src/server/test/init",
     "start": "gulp buildClient; node src/server/app.js",
+    "server": "node src/server/app.js",
     "postinstall": "",
     "client_dev": "gulp --type dev",
     "client_build": "gulp build"

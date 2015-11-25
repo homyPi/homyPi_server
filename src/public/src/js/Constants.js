@@ -21,7 +21,8 @@ export default {
     GET_ALL: null,
     UPDATE_STATUS: null,
     NEW: null,
-    REMOVE: null
+    REMOVE: null,
+    NEW_MODULE: null
   }),
 
   ServiceActionTypes: keyMirror({
