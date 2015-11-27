@@ -4,11 +4,10 @@
 var mongoose = require("mongoose"),
 	_   = require('lodash'),
 	bcrypt   = require('bcrypt-nodejs');
-var ModuleManager = require("../../modules/ModuleManager");
 
 var MongooseModels = require("./mongoose-models");
 
-module.exports = function () {
+module.exports = function (ModuleManager) {
 	"use strict";
 	if (process.env.schemaLoaded) {
 		return null;

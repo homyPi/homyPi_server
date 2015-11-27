@@ -14,9 +14,9 @@ var express = require('express');
 var routes = require("./routes");
 
 var ModuleManager = require("./modules/ModuleManager");
+ModuleManager.init();
 
-
-var schema = require('./models/mongoose/mongoose-schema.js')();
+var schema = require('./models/mongoose/mongoose-schema.js')(ModuleManager);
 var models = require('./models/mongoose/mongoose-models.js');
 var connection = require('./models/mongoose/mongoose-connection')();
 

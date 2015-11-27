@@ -19,6 +19,7 @@ class RaspberriesSettings extends React.Component {
 	constructor(props) {
 	    super(props);
 	    this.state = {
+	    	newRaspberryName: "",
 			raspberries: RaspberryStore.getAll().raspberries
 		};
   	}
@@ -29,12 +30,15 @@ class RaspberriesSettings extends React.Component {
 		RaspberryActionCreators.getAll();
 		RaspberryStore.addChangeListener(() => { this._onRaspberriesChange() });
 	}
+	componentWillUnmount() {
+		RaspberryStore.removeChangeListener(() => { this._onRaspberriesChange() });
+	}
 	render() {
 		let {raspberries} = this.state;
 
 		let standardActions = [
 		  { text: 'Cancel' },
-		  { text: 'Add', onTouchTap: this._onDialogSubmit }
+		  { text: 'Add', onTouchTap: this._onDialogSubmit.bind(this) }
 		];
 		return (
 			<Paper style={styles.container}>
@@ -53,21 +57,29 @@ class RaspberriesSettings extends React.Component {
 				  title="Add a new raspberry"
 				  actions={standardActions}
 				  open={this.state.showModal}
-				  onRequestClose={this._handleRequestClose}>
+				  onRequestClose={this._handleRequestClose.bind(this)}>
 				  	<form>
-				  		<input value="name"/>
+				  		<input value={this.state.newRaspberryName}
+  							onChange={this._setNewRaspberryName.bind(this)} />
 				  	</form>
 				</Dialog>
 			</Paper>
 		)
 	}
-
+	_handleRequestClose(event) {
+		this.setState({showModal: false});
+	}
+	_setNewRaspberryName(event) {
+		this.setState({newRaspberryName: event.target.value})
+	}
 	_showAddRaspberryModal() {
-		this.setState({showModal: true});
+		this.setState({newRaspberryName: "", showModal: true});
 	}
 
 	_onDialogSubmit() {
+		if (!this.state.newRaspberryName) return;
 		this.setState({showModal: false});
+		RaspberryActionCreators.add(this.state.newRaspberryName);
 	}
 }
 

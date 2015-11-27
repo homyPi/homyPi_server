@@ -2,39 +2,48 @@ var _ = require("lodash");
 var Promise = require("bluebird");
 var Toposort = require('toposort-class'),
     t = new Toposort();
-var modulesNames = require("../data/public/config").modules || [];
 var ServicesManager = require("./ServicesManager");
-var modules = {};
-var order = [];
-
-var Raspberry;
-var UserMiddleware;
-var MongooseModels;
-
 var config = require("../data/private/config");
 
-_.forEach(modulesNames, function(m) {
-	var mGraph = [];
-	modules[m] = require(m+ "/server/config");
-	if(modules[m].require) {
-		modules[m].require.every(function(dep) {
-			mGraph.push(dep.module);
-		});
-	}
-	t.add(m, mGraph);
-});
-order = t.sort().reverse();
+
 ModuleManager = function() {};
+
+ModuleManager.Raspberry;
+ModuleManager.UserMiddleware;
+ModuleManager.MongooseModels;
+
+ModuleManager.modulesNames = [];
+ModuleManager.modules = {};
+ModuleManager.order = [];
+
+ModuleManager.init = function(names, mods) {
+	ModuleManager.modulesNames = names || require(__base + "data/public/config").modules || [];
+	ModuleManager.modules = mods || {};
+	ModuleManager._setOrder();
+}
 ModuleManager.get = function(moduleName) {
-	if (modules[moduleName] && modules[moduleName].module) {
-		return modules[moduleName].module;
+	if (ModuleManager.modules[moduleName] && ModuleManager.modules[moduleName].module) {
+		return ModuleManager.modules[moduleName].module;
 	}
 	var err = new Error("Cannot find module '" + moduleName + "'");
 	err.code = 'MODULE_NOT_FOUND';
 	throw err;
 }
-
-var setModule = function(module, moduleName) {
+ModuleManager._setOrder = function() {
+	_.forEach(ModuleManager.modulesNames, function(m) {
+		var mGraph = [];
+		if (!ModuleManager.modules[m])
+			ModuleManager.modules[m] = require(m+ "/server/config");
+		if(ModuleManager.modules[m].require) {
+			ModuleManager.modules[m].require.every(function(dep) {
+				mGraph.push(dep.module);
+			});
+		}
+		t.add(m, mGraph);
+	});
+	ModuleManager.order = t.sort().reverse();
+}
+ModuleManager._setModule = function(module, moduleName) {
 	return new Promise(function(resolve, reject) {
 		if(module.module) {
 			return resolve()
@@ -67,17 +76,22 @@ var setModule = function(module, moduleName) {
 		}
 	});
 }
-var executePromiseSorted = function(fn, i) {
+ModuleManager.executePromiseSorted = function(fn, i) {
 	return new Promise(function(resolve, reject) {
+		console.log((typeof fn))
+		if (!ModuleManager.order.length || typeof fn != "function") return resolve();
+
 		if(typeof i === "undefined") {
 			i = 0;
 		}
-		console.log("execute promise for " + order[i] + "("+i+")");
-		fn(modules[order[i]], order[i])
+		var modName = ModuleManager.order[i];
+		console.log("execute promise for " + modName + "("+i+")");
+
+		fn(ModuleManager.modules[modName], modName)
 			.then(function() {
 				i++;
-				if(i < order.length) {
-					executePromiseSorted(fn, i)
+				if(i < ModuleManager.order.length) {
+					ModuleManager.executePromiseSorted(fn, i)
 						.then(resolve)
 						.catch(reject);
 				} else {
@@ -86,35 +100,33 @@ var executePromiseSorted = function(fn, i) {
 			}).catch(reject);
 	});
 }
-var executeSorted = function(fn) {
-		for(var i = 0; i < order.length; i++) {
-			console.log(order[i]);
-			fn(modules[order[i]], order[i]);
-		}
+ModuleManager.executeSorted = function(fn) {
+	if(typeof fn != "function") return;
+	for(var i = 0; i < ModuleManager.order.length; i++) {
+		console.log(ModuleManager.order[i]);
+		fn(ModuleManager.modules[ModuleManager.order[i]], ModuleManager.order[i]);
 	}
-module.exports = {
-	load: function() {
+};
+ModuleManager.load = function() {
 		return new Promise(function(resolve, reject) {
 			Raspberry = require("../models/Raspberry");
 			UserMiddleware = require("../middleware/user");
 			MongooseModels = require("../models/mongoose/mongoose-models");
-			executePromiseSorted(setModule)
+			ModuleManager.executePromiseSorted(ModuleManager._setModule)
 				.then(resolve)
 				.catch(reject);
 		});
 		//executeSorted(setModule);
-	},
-	setUpSocket: function(socket, io) {
-		_.forEach(modules, function(module, key) {
+	};
+ModuleManager.setUpSocket = function(socket, io) {
+		_.forEach(ModuleManager.modules, function(module, key) {
 			if(module.module && typeof module.module.setSocket === "function") {
 				console.log("setting socket for " + key);
 				module.module.setSocket(socket, io);
 			}
 		});
-	},
-	get: ModuleManager.get,
-	getAll: function() {
-		return modules;
-	},
-	executeSorted: executeSorted
-}
+	};
+ModuleManager.getAll = function() {
+		return ModuleManager.modules;
+	};
+module.exports = ModuleManager

@@ -21,6 +21,9 @@ export default {
   		this.socket.on("raspberry:new", function(data) {
   			RaspberryActionCreators.newRaspberry(data.raspberry);
   		});
+      this.socket.on("raspberry:remove", function(data) {
+        RaspberryActionCreators.removeRaspberry(data.name);
+      });
   		this.socket.on("raspberry:module:new", function(data) {
   			//RaspberryActionCreators.newModule(data);
   		});

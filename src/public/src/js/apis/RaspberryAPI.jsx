@@ -31,5 +31,30 @@ export default {
 				});
 		});
 		return getAllPromise;
+	},
+	add(name) {
+
+		new Promise((resolve, reject) => {
+			$.ajax({
+					url: serverUrl + "/api/raspberries/",
+					type: "POST",
+				    data: JSON.stringify({"name": name, "modules": ["alarm", "music"]}),
+				    contentType: "application/json; charset=utf-8",
+				    dataType: "json",
+					beforeSend: setHeaders,
+					success: function(resp) {
+						getAllPromise = null;
+						if (resp.status === "success") {
+							resolve(resp.data);
+						} else {
+							reject(resp.error);
+						}
+					},
+					fail: function(err) {
+						getAllPromise = null;
+						reject(err)
+					}
+				});
+		});
 	}
 };

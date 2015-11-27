@@ -15,6 +15,18 @@ export default {
 
 			});
 	},
+	add(name) {
+		RaspberryAPI.add(name)
+			.then(function(raspberry) {
+				Dispatcher.handleViewAction({
+			        type: Constants.RaspberryActionTypes.RASPBERRY_ADDED,
+			        raspberry: raspberry
+      			});
+			})
+			.catch(function(err) {
+
+			});
+	},
 	setSelectedRaspberry(raspberry) {
 		Dispatcher.handleViewAction({
 			type: Constants.RaspberryActionTypes.SET_SELECTED,
@@ -27,10 +39,16 @@ export default {
 			raspberry: raspberry
       	});
 	},
-	removeRaspberry(socketId) {
+	removeRaspberry(name) {
 		Dispatcher.handleViewAction({
 			type: Constants.RaspberryActionTypes.REMOVE,
-			socketId: socketId
+			name: name
+      	});
+	},
+	disableRaspberry(name) {
+		Dispatcher.handleViewAction({
+			type: Constants.RaspberryActionTypes.DISABLE,
+			name: name
       	});
 	},
 	newModule(data) {

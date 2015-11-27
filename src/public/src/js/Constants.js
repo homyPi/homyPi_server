@@ -22,6 +22,7 @@ export default {
     UPDATE_STATUS: null,
     NEW: null,
     REMOVE: null,
+    DISABLE: null,
     NEW_MODULE: null
   }),
 

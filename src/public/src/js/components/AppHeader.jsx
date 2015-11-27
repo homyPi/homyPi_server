@@ -28,9 +28,12 @@ class AppHeader extends React.Component {
 	    	selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
 	    };
 	}
-	componentWillMount() {
+	componentDidMount() {
 		RaspberryActionCreators.getAll();
 		RaspberryStore.addChangeListener(() => { this._onRaspberriesChange() });
+	}
+	componentWillUnmount() {
+		RaspberryStore.removeChangeListener(() => { this._onRaspberriesChange() });
 	}
 	_onRaspberriesChange() {
 		this.setState({
@@ -74,6 +77,7 @@ class AppHeader extends React.Component {
 				      }</Avatar>
 				    }>
 				    {this.state.raspberries.map((rasp) => {
+				    	if (rasp.state !== "UP") return;
 				    	return (
 				    		<HeaderMenuItem 
 				    			key={rasp.id} 

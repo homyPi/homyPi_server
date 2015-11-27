@@ -3,8 +3,8 @@ import Constants from '../Constants';
 import BaseStore from './BaseStore';
 import assign from 'object-assign';
 
-import ModuleManager from '../ModuleManager.jsx'
-
+import ModuleManager from '../ModuleManager.jsx';
+console.log(ModuleManager);
 // data storage
 let raspberries = [];
 let selected = null;
@@ -26,6 +26,10 @@ function selectDefault() {
       selectedKey = null;
     }
   }
+  console.log("DEFAULT CHANGED!!!!", ModuleManager);
+  ModuleManager.notifyRaspberryEvent(ModuleManager.RASPBERRY_EVENTS.SELECTED_CHANGED, {
+    selected : selected
+  });
 }
 function setRaspberries(list) {
   raspberries = [];
@@ -50,6 +54,16 @@ function removeRaspberry(name) {
     selectedName = null;
     selectDefault();
   }
+  ModuleManager.notifyRaspberryEvent(ModuleManager.RASPBERRY_EVENTS.DISCONNECTED, {
+    name: name
+  });
+}
+function disableRaspberry(name) {
+  let rasp = getRaspberry(name);
+  if (rasp) {
+    rasp.status = "DOWN";
+  }
+
 }
 
 function setSelected(raspberry) {
@@ -82,7 +96,6 @@ function newModule(data) {
       if (data.socketId ===  raspberries[i].socketId) {
         raspberries[i].modules = raspberries[i].modules || {};
         raspberries[i].modules[data.module] = data;
-        console.log("notify change for ", raspberries[i]);
       }
   }
 }
@@ -100,9 +113,17 @@ const RaspberryStore = assign({}, BaseStore, {
     let action = payload.action;
     switch(action.type) {
       case Constants.RaspberryActionTypes.GET_ALL:
+        console.log("RASPBERRY_STORE GOT ALL!!");
+
+        try {
         let list = action.list;
         setRaspberries(list);
-        RaspberryStore.emitChange();
+        console.log("RASPBERRY_STORE IS EMMITING!!");
+          RaspberryStore.emitChange();
+        } catch(e) {
+          console.log(e);
+          console.log(e.stack);
+        }
         break;
       case Constants.RaspberryActionTypes.SET_SELECTED:
         let selectedRaspberry = action.raspberry;
@@ -110,6 +131,7 @@ const RaspberryStore = assign({}, BaseStore, {
         RaspberryStore.emitChange();
         break;
       case Constants.RaspberryActionTypes.NEW:
+        console.log("RASPBERRY_STORE NEWWWWWWWW");
         let raspberry = action.raspberry;
         addRaspberry(raspberry);
         selectDefault();
@@ -118,6 +140,11 @@ const RaspberryStore = assign({}, BaseStore, {
       case Constants.RaspberryActionTypes.REMOVE:
         let nameRemoved = action.name;
         removeRaspberry(nameRemoved);
+        RaspberryStore.emitChange();
+        break;
+      case Constants.RaspberryActionTypes.DISABLE:
+        let nameDisable = action.name;
+        disableRaspberry(nameDisable);
         RaspberryStore.emitChange();
         break;
       case Constants.RaspberryActionTypes.NEW_MODULE:

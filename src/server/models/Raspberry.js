@@ -48,7 +48,7 @@ Raspberry.findOne = function(name) {
 
 Raspberry.start = function(name, ip, socketId) {
 	return new Promise(function(resolve, reject) {
-		raspberryModel.findOneAndUpdate({ name: name }, { ip: ip, socketId: socketId }, { multi: false, "new": true}, function (err, raspberry) {
+		raspberryModel.findOneAndUpdate({ name: name }, { ip: ip, socketId: socketId, state: "UP" }, { multi: false, "new": true}, function (err, raspberry) {
   			if (err) {
   				return reject({code: 0, message: "mongo error", id: "MONGO_ERROR", details: err});
   			} else if (!raspberry) {
@@ -69,6 +69,7 @@ Raspberry.stop = function(name) {
 					raspberry.modules[i].state = "DOWN";
 					Raspberry._notifyModuleChange(raspberry, raspberry.modules[i]);
 				}
+				raspberry.state = "DOWN";
 				raspberry.save(function (err) {
 		 			if (err) {
 		 				return reject({code: 0, message: "mongo error", id: "MONGO_ERROR", details: err});
