@@ -1,10 +1,12 @@
 /*global console*/
 /*global module*/
-var config = require(__base + "data/private/config.js");
 var mongoose = require('mongoose');
 var models = require('./mongoose-models.js');
-module.exports = function (callback) {
+module.exports = function (config, callback) {
     "use strict";
+    if (!config) {
+        config = require(__base + "data/private/config.js");
+    }
     console.log("connecting to " + config.server_config.MONGO_URI);
     mongoose.connect(config.server_config.MONGO_URI, function (err) {
         if (err) {

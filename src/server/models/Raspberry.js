@@ -1,4 +1,4 @@
-var raspberryModel = require(__base + "models/mongoose/mongoose-models").Raspberry;
+var raspberryModel = require("./mongoose/mongoose-models").Raspberry;
 var Promise = require("bluebird");
 
 Raspberry = function() {}

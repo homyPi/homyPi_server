@@ -1,4 +1,4 @@
-var ServicesManager = require(__base + "modules/ServicesManager")
+var ServicesManager = require("../modules/ServicesManager")
 
 var getAll = function(req, res) {
 	ServicesManager.getServicesInfo(req.user).then(function(data) {

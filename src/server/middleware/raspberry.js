@@ -1,4 +1,4 @@
-var Raspberry  = require(__base + "models/Raspberry");
+var Raspberry  = require("../models/Raspberry");
 var _ = require("lodash");
 
 /**

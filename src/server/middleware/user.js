@@ -1,7 +1,7 @@
-var userModel = require(__base + "models/mongoose/mongoose-models").User;
+var userModel = require("../models/mongoose/mongoose-models").User;
 var jwt = require("jwt-simple");
 var fs = require("fs");
-var config = require(__base + "data/private/config.js");
+var config = require("../data/private/config.js");
 
 var login = function(req, res) {
 	if (!req.body.username || !req.body.password) {

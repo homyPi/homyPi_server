@@ -17,13 +17,15 @@ ModuleManager.modules = {};
 ModuleManager.order = [];
 
 ModuleManager.init = function(names, mods) {
-	ModuleManager.modulesNames = names || [];
-	if (!ModuleManager.modulesNames.length) {
-		var modList = require(__base + "data/public/config").modules
+	ModuleManager.modulesNames = names;
+	if (!ModuleManager.modulesNames) {
+		ModuleManager.modulesNames = [];
+		var modList = require("../data/public/config").modules
 		for (var m in modList) {
 			ModuleManager.modulesNames.push(m);
 		}
 	}
+
 	ModuleManager.modules = mods || {};
 	ModuleManager._setOrder();
 }
@@ -51,26 +53,26 @@ ModuleManager._setOrder = function() {
 }
 ModuleManager._setModule = function(module, moduleName) {
 	return new Promise(function(resolve, reject) {
-		if(module.module) {
-			return resolve()
-		}
 		if(module.error) {
 			return reject(module.error)
 		}
 		
 		try {
+			console.log("Setting up " + moduleName);
 			//checkConfig(module, moduleName);
-			var mod = require(moduleName + "/server");
-			if (typeof mod.link === "function") {
-				mod.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
+			if (!module.module) {
+				var mod = require(moduleName + "/server");
+				module.module = mod;
 			}
-			module.module = mod;
+			if (typeof module.module.link === "function") {
+				module.module.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
+			}
 			console.log(moduleName + " LOADED");
 			if(typeof module.getServices === "function") {
 				ServicesManager.addServices(module.getServices());
 			}
-			if(typeof mod.init === "function") {
-				return mod.init().then(resolve).catch(reject);
+			if(typeof module.module.init === "function") {
+				return module.module.init().then(resolve).catch(reject);
 			} else {
 				return resolve();
 			}
@@ -84,7 +86,6 @@ ModuleManager._setModule = function(module, moduleName) {
 }
 ModuleManager.executePromiseSorted = function(fn, i) {
 	return new Promise(function(resolve, reject) {
-		console.log((typeof fn))
 		if (!ModuleManager.order.length || typeof fn != "function") return resolve();
 
 		if(typeof i === "undefined") {
@@ -92,7 +93,6 @@ ModuleManager.executePromiseSorted = function(fn, i) {
 		}
 		var modName = ModuleManager.order[i];
 		console.log("execute promise for " + modName + "("+i+")");
-
 		fn(ModuleManager.modules[modName], modName)
 			.then(function() {
 				i++;
@@ -110,11 +110,14 @@ ModuleManager.executeSorted = function(fn) {
 	if(typeof fn != "function") return;
 	for(var i = 0; i < ModuleManager.order.length; i++) {
 		console.log(ModuleManager.order[i]);
-		fn(ModuleManager.modules[ModuleManager.order[i]], ModuleManager.order[i]);
+		if (ModuleManager.modules[ModuleManager.order[i]]) {
+			fn(ModuleManager.modules[ModuleManager.order[i]], ModuleManager.order[i]);
+		}
 	}
 };
 ModuleManager.load = function() {
 		return new Promise(function(resolve, reject) {
+			console.log("Loading modules");
 			Raspberry = require("../models/Raspberry");
 			UserMiddleware = require("../middleware/user");
 			MongooseModels = require("../models/mongoose/mongoose-models");
