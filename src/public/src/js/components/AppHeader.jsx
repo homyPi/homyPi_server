@@ -77,10 +77,10 @@ class AppHeader extends React.Component {
 				      }</Avatar>
 				    }>
 				    {this.state.raspberries.map((rasp) => {
-				    	if (rasp.state !== "UP") return;
 				    	return (
 				    		<HeaderMenuItem 
 				    			key={rasp.id} 
+				    			disabled={(rasp.state !== "UP")}
 				    			primaryText={rasp.name} 
 				    			onClick={()=> {this._selectedPi(rasp)}} />
 				    		);

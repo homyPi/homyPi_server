@@ -16,17 +16,20 @@ var onChangeRaspberryListeners = [];
 
 function selectDefault() {
   if (!selected) {
-    if (raspberries.length) {
-      selectedName = raspberries[0].name;
-      selected = raspberries[0];
-      selectedKey = 0;
-    } else {
       selected = null;
-      selectedId = null;
+      selectedName = null;
       selectedKey = null;
+    if (raspberries.length) {
+      for (var i = 0; i < raspberries.length; i++) {
+        if (raspberries[i].state === "UP") {
+          selectedName = raspberries[i].name;
+          selected = raspberries[i];
+          selectedKey = i;
+          break;
+        }
+      }
     }
   }
-  console.log("DEFAULT CHANGED!!!!", ModuleManager);
   ModuleManager.notifyRaspberryEvent(ModuleManager.RASPBERRY_EVENTS.SELECTED_CHANGED, {
     selected : selected
   });

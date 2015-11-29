@@ -17,7 +17,13 @@ ModuleManager.modules = {};
 ModuleManager.order = [];
 
 ModuleManager.init = function(names, mods) {
-	ModuleManager.modulesNames = names || require(__base + "data/public/config").modules || [];
+	ModuleManager.modulesNames = names || [];
+	if (!ModuleManager.modulesNames.length) {
+		var modList = require(__base + "data/public/config").modules
+		for (var m in modList) {
+			ModuleManager.modulesNames.push(m);
+		}
+	}
 	ModuleManager.modules = mods || {};
 	ModuleManager._setOrder();
 }

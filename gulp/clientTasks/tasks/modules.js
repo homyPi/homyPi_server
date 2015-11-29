@@ -22,9 +22,9 @@ var havePublicModule = function(module) {
 gulp.task('modules', function(callback){
 	var config = require(configFile);
 	var out = 	"module.exports = [\n";
-	for(var i = 0; i < config.modules.length; i++) {
-		if (havePublicModule(config.modules[i])) {
-			out += "    require('" + config.modules[i] + "/public'),\n";
+	for(var module in config.modules) {
+		if (havePublicModule(module)) {
+			out += "    require('" + module + "/public'),\n";
 		}
 	}
 	out += "];"
