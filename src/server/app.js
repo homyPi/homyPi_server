@@ -9,6 +9,7 @@ try {
 	console.log(e);
 	console.log("unable to get env file");
 }
+var config = require("./data/private/config.js");
 
 var express = require('express');
 var routes = require("./routes");
@@ -18,13 +19,12 @@ ModuleManager.init();
 
 var schema = require('./models/mongoose/mongoose-schema.js')(ModuleManager);
 var models = require('./models/mongoose/mongoose-models.js');
-var connection = require('./models/mongoose/mongoose-connection')();
+var connection = require('./models/mongoose/mongoose-connection')(config);
 
 var winston = require('winston');
 var expressWinston = require('express-winston');
 var bodyParser = require('body-parser');
 var bearerToken = require('express-bearer-token');
-var config = require("./data/private/config.js");
 var jwt = require("jwt-simple");
 var path = require("path");
 

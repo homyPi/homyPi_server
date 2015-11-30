@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router';
 import {RaisedButton, Paper} from 'material-ui';
 import UserAPI from '../apis/UserAPI.jsx';
 
@@ -35,30 +34,30 @@ let styles = {
 	}
 };
 
-class RaspberryItem extends React.Component {
+class ModuleItem extends React.Component {
 	constructor(props) {
 	    super(props);
   	}
 
   	_getStatus() {
-  		let {state} = this.props.raspberry;
+  		let {state} = this.props.module;
   		if (state === "UP") {
   			return (
 				<div style={styles.enabled}>
-						ON
+						UP
 				</div>
   			);
   		} else {
   			return (
 				<div style={styles.disabled}>
-					OFF
+					DOWN
 				</div>
   			);
   		}
   	}
 
 	render() {
-		let {name} = this.props.raspberry;
+		let {name} = this.props.module;
 		return (
 			<Paper style={styles.container}>
 				<div style={styles.leftBlock}>
@@ -66,23 +65,15 @@ class RaspberryItem extends React.Component {
 				</div>
 				<div style={styles.rightBlock}>
 					{this._getStatus()}
-					<Link to={this._detailsLink(name)}>
-						<RaisedButton
-					  		title="Details"
-					  		primary={false} />
-				  	</Link>
 
 				</div>
 			</Paper>
 		)
 	}
-	_detailsLink(name) {
-		return "/app/settings/raspberries/" + name;
-	}
 }
 
-RaspberryItem.defaultProps = {
-	raspberry: {}
+ModuleItem.defaultProps = {
+	module: {}
 }
 
-export default RaspberryItem;
+export default ModuleItem;

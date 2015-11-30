@@ -15,7 +15,13 @@ var removeRaspberryListeners = [];
 var onChangeRaspberryListeners = [];
 
 function selectDefault() {
-  if (!selected) {
+  var favName = localStorage.getItem('selectedRaspberry');
+  var raspberry = getRaspberry(favName);
+  if (raspberry && raspberry.state === "UP") {
+      selected = raspberry;
+      selectedName = favName;
+      selectedKey = getRaspberryKey(favName);
+  } else if (!selected) {
       selected = null;
       selectedName = null;
       selectedKey = null;
@@ -30,6 +36,7 @@ function selectDefault() {
       }
     }
   }
+  localStorage.setItem('selectedRaspberry', selectedName);
   ModuleManager.notifyRaspberryEvent(ModuleManager.RASPBERRY_EVENTS.SELECTED_CHANGED, {
     selected : selected
   });
@@ -40,6 +47,14 @@ function setRaspberries(list) {
     addRaspberry(list[i]);
   }
   selectDefault();
+}
+function setRaspberry(raspberry) {
+  var index = getRaspberryKey(raspberry.name);
+  if (index < 0) {
+    addRaspberry(raspberry)
+  } else {
+    raspberries[index] = raspberry;
+  }
 }
 function addRaspberry(rasp) {
   var inList = getRaspberry(rasp.name);
@@ -81,15 +96,28 @@ function setSelected(raspberry) {
   if (!selected) {
      selectDefault();
   }
+  localStorage.setItem('selectedRaspberry', selectedName);
+  ModuleManager.notifyRaspberryEvent(ModuleManager.RASPBERRY_EVENTS.SELECTED_CHANGED, {
+    selected : selected
+  });
 }
 
 function getRaspberry(name) {
+  if (!name) return;
   for(var i = 0; i < raspberries.length; i++) {
     if (raspberries[i].name === name) {
       return raspberries[i];
     }
   }
   return;
+}
+function getRaspberryKey(name) {
+  for(var i = 0; i < raspberries.length; i++) {
+    if (raspberries[i].name === name) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 function newModule(data) {
@@ -109,9 +137,11 @@ const RaspberryStore = assign({}, BaseStore, {
   getAll() {
     return {
       raspberries: raspberries,
-      selectedRaspberry: raspberries[selectedKey]
+      selectedRaspberry: raspberries[selectedKey],
+      getRaspberry: getRaspberry
     };
   },
+  getRaspberry: getRaspberry,
   dispatcherIndex: Dispatcher.register(function(payload) {
     let action = payload.action;
     switch(action.type) {
@@ -127,6 +157,10 @@ const RaspberryStore = assign({}, BaseStore, {
           console.log(e);
           console.log(e.stack);
         }
+        break;
+      case Constants.RaspberryActionTypes.GET:
+        setRaspberry(action.raspberry);
+        RaspberryStore.emitChange();
         break;
       case Constants.RaspberryActionTypes.SET_SELECTED:
         let selectedRaspberry = action.raspberry;

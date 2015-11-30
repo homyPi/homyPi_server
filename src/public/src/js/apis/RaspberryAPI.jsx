@@ -32,6 +32,25 @@ export default {
 		});
 		return getAllPromise;
 	},
+	get(name) {
+		return new Promise((resolve, reject) => {
+			$.ajax({
+					url: serverUrl + "/api/raspberries/" + name,
+					type: "GET",
+					beforeSend: setHeaders,
+					success: function(resp) {
+						if (resp.status === "success") {
+							resolve(resp.data.raspberry);
+						} else {
+							reject(resp.error);
+						}
+					},
+					fail: function(err) {
+						reject(err)
+					}
+				});
+		});
+	},
 	add(name) {
 
 		new Promise((resolve, reject) => {

@@ -22,16 +22,16 @@ class RaspberriesSettings extends React.Component {
 	    	newRaspberryName: "",
 			raspberries: RaspberryStore.getAll().raspberries
 		};
-  	}
-  	_onRaspberriesChange() {
-  		this.setState({raspberries: RaspberryStore.getAll().raspberries})
+	  	this._onRaspberriesChange = () => {
+	  		this.setState({raspberries: RaspberryStore.getAll().raspberries})
+	  	}
   	}
 	componentWillMount() {
 		RaspberryActionCreators.getAll();
-		RaspberryStore.addChangeListener(() => { this._onRaspberriesChange() });
+		RaspberryStore.addChangeListener(this._onRaspberriesChange);
 	}
 	componentWillUnmount() {
-		RaspberryStore.removeChangeListener(() => { this._onRaspberriesChange() });
+		RaspberryStore.removeChangeListener(this._onRaspberriesChange);
 	}
 	render() {
 		let {raspberries} = this.state;

@@ -46,7 +46,7 @@ ModuleManager.notifyModuleEvent = function(moduleName, event, data) {
 	ModuleManager.watchRaspberry = function(callback) {
 		raspberryListeners.push(callback);
 	}
-	ModuleManager.notifyRaspberryEvent = function(moduleName, event, data) {
+	ModuleManager.notifyRaspberryEvent = function(event, data) {
 		for (let callback of raspberryListeners) {
 			callback(event, data);
 		}

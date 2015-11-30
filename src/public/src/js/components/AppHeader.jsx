@@ -27,19 +27,19 @@ class AppHeader extends React.Component {
 	    	raspberries: RaspberryStore.getAll().raspberries,
 	    	selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
 	    };
+		this._onRaspberriesChange = () => {
+			this.setState({
+				raspberries: RaspberryStore.getAll().raspberries,
+				selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
+			});
+		}
 	}
 	componentDidMount() {
 		RaspberryActionCreators.getAll();
-		RaspberryStore.addChangeListener(() => { this._onRaspberriesChange() });
+		RaspberryStore.addChangeListener(this._onRaspberriesChange);
 	}
 	componentWillUnmount() {
-		RaspberryStore.removeChangeListener(() => { this._onRaspberriesChange() });
-	}
-	_onRaspberriesChange() {
-		this.setState({
-			raspberries: RaspberryStore.getAll().raspberries,
-			selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
-		});
+		RaspberryStore.removeChangeListener(this._onRaspberriesChange);
 	}
 	render() {
 		let menuItems = [];

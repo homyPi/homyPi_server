@@ -23,7 +23,8 @@ export default {
     NEW: null,
     REMOVE: null,
     DISABLE: null,
-    NEW_MODULE: null
+    NEW_MODULE: null,
+    SET_SELECTED: null
   }),
 
   ServiceActionTypes: keyMirror({

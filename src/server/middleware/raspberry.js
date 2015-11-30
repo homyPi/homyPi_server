@@ -32,7 +32,18 @@ var getAll = function(req, res) {
 		})
 };
 
+var get = function(req, res) {
+	if (!req.params.name) return res.json({status: "error", error: {code: -1, message: "invalid request"}});
+	Raspberry.findOne(req.params.name)
+		.then(function(raspberry) {
+			return res.json({status: "success", data: {
+				raspberry: raspberry
+			}});
+		}).catch(res.json);
+};
+
 module.exports = {
 	add: add,
-	getAll: getAll
+	getAll: getAll,
+	get: get
 };

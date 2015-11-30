@@ -15,6 +15,18 @@ export default {
 
 			});
 	},
+	get(name) {
+		RaspberryAPI.get(name)
+			.then(function(raspberry) {
+				Dispatcher.handleViewAction({
+			        type: Constants.RaspberryActionTypes.GET,
+			        raspberry: raspberry
+      			});
+			})
+			.catch(function(err) {
+
+			});
+	},
 	add(name) {
 		RaspberryAPI.add(name)
 			.then(function(raspberry) {
