@@ -55,5 +55,6 @@ module.exports = {
     "session_secret":"big bada boum",
     "sign_in_required":true,
     "jwtSecret": "grtGV684ezFnJftyJtdrda",
-    "host_url": "http://localhost:3000"
+    "host_url": "http://localhost:3000",
+    "configKeys": ["HOMYPI_SERVER_PORT", "HOMYPI_MONGO_URI", "HOMYPI_SPOTIFY_CLIENT_ID"]
 }
