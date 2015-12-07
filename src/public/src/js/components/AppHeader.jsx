@@ -28,6 +28,7 @@ class AppHeader extends React.Component {
 	    	selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
 	    };
 		this._onRaspberriesChange = () => {
+			console.log("MENU HEADER raspberries changed");
 			this.setState({
 				raspberries: RaspberryStore.getAll().raspberries,
 				selectedRaspberry: RaspberryStore.getAll().selectedRaspberry
@@ -42,6 +43,7 @@ class AppHeader extends React.Component {
 		RaspberryStore.removeChangeListener(this._onRaspberriesChange);
 	}
 	render() {
+			console.log("MENU HEADER render");
 		let menuItems = [];
 		ModuleManager.modules.forEach(function(m) {
 			if (m.config.menu && m.config.menu.length) {
@@ -64,7 +66,7 @@ class AppHeader extends React.Component {
 				menuItems.push(m.config.settingsRoute);
 			}
 		});
-
+		console.log("MENU HEADER state:", this.state);
 		return (
 			<div>
 				<AppBar
