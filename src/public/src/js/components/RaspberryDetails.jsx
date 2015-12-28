@@ -48,15 +48,22 @@ class RaspberriesSettings extends React.Component {
 	render() {
 		let {raspberry} = this.state;
 		return (
-			<Paper style={styles.container}>
-				<h2>{raspberry.name}</h2>
-				{raspberry.modules.map(function(module) {
-					return (
-						<ModuleItem module={module}/>
-					);
+			<div>
+				<Paper style={styles.container}>
+					<h2>{raspberry.name}</h2>
+					{raspberry.modules.map(function(module) {
+						return (
+							<ModuleItem module={module}/>
+						);
+					}.bind(this))}
+					
+				</Paper>
 
-				}.bind(this))}
-			</Paper>
+				<Paper style={styles.container}>
+					<h2>Info</h2>
+					IP address: {raspberry.ip}
+				</Paper>
+			</div>
 		)
 	}
 	_getStateView(module) {

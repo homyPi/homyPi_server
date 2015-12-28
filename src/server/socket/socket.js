@@ -47,6 +47,7 @@ IO.init = function(server) {
 
 		}
 		socket.on('ping', function(){
+			console.log("ping:received")
 			socket.emit("ping:received");
 		});
 		raspberrySocket(socket);
@@ -54,7 +55,8 @@ IO.init = function(server) {
 		ModuleManager.setUpSocket(socket, IO.io);
 		socket.on('disconnect', function(){
 			console.log("client disconnected");
-			if (socket.decoded_token.isRaspberry) {
+			if (socket.decoded_token.isRaspberry
+				&& socket.raspberryInfo) {
 				Raspberry.stop(socket.raspberryInfo.name)
 				.then(function(raspberry) {
 					console.log(JSON.stringify(raspberry))

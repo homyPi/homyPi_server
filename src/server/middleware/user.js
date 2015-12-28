@@ -1,6 +1,7 @@
 var userModel = require("../models/mongoose/mongoose-models").User;
 var jwt = require("jwt-simple");
 var fs = require("fs");
+var bcrypt = require('bcrypt');
 var config = require("../data/private/config.js");
 
 var login = function(req, res) {
@@ -27,8 +28,18 @@ var login = function(req, res) {
 	})
 };
 
+var encrypt = function(password, salt) {
+	if (!salt) {
+		salt = bcrypt.genSaltSync(12);
+	}
+	var hash = bcrypt.hashSync(password, salt);
+	return hash
+
+
+}
+
 var checkPassword = function(requestPassword, userInfo) {
-	return requestPassword === userInfo.password;
+	return bcrypt.compareSync(requestPassword, userInfo.password);
 };
 
 var generateToken = function(userInfo) {
@@ -52,13 +63,13 @@ var editPassword = function(req, res) {
 		if (!userInfo) {
 			return res.json({error: "invalid"});
 		} else {
-			if (req.body.oldPassword !== userInfo.password) {
+			if (!checkPassword(req.body.oldPassword, userInfo)) {
 				return res.json({error: "invalid password"});
 			}
 			if (req.body.newPassword !== req.body.confirmNewPassword) {
 				return res.json({error: "invalid new password"});
 			} else {
-				userInfo.password = req.body.newPassword;
+				userInfo.password = encrypt(req.body.newPassword);
 				userInfo.save(function(err) {
 					if(err) {
 						res.json({err: err});

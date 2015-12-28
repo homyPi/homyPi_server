@@ -32,6 +32,18 @@ Raspberry.add = function(name, modulesNames) {
 	});
 }
 
+Raspberry.emitTo = function(name, event, data) {
+	return new Promise(function(resolve, reject) {
+		Raspberry.findOne(name)
+			.then(function(raspberry) {
+			if (!raspberry.socketId) {
+				return reject({code: 404, message: "no raspberry with that name", id: "RASPBERRY_NOT_FOUND"});
+			}
+			process.io.sockets.connected[raspberry.socketId].emit(event, data);
+		}).catch(reject);
+	});
+}
+
 Raspberry.findOne = function(name) {
 	return new Promise(function(resolve, reject) {
 		raspberryModel.findOne({name: name}, function(err, raspberry) {
