@@ -10,7 +10,7 @@ var login = function(req, res) {
 	}
 	userModel.findOne({username: req.body.username}, function(err, userInfo) {
 		if (!userInfo) {
-			return res.json({error: "invalid"});
+			return res.json({status: "error", data: "invalid"});
 		} else {
 			if (checkPassword(req.body.password, userInfo)) {
 				return res.json({token: generateToken(
@@ -21,7 +21,7 @@ var login = function(req, res) {
 					}
 				)});
 			} else {
-				return res.json({error: "invalid"});
+				return res.json({status: "error", data: "invalid"});
 			}
 		}
 		res.json({err: err, data:data});
