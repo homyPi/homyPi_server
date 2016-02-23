@@ -5,4 +5,4 @@ var schema = require("./mongoose-schema");
 
 var MongooseModels = function() {};
 
-module.exports = MongooseModels;
+export default MongooseModels;

@@ -1,7 +1,7 @@
-var raspberryModel = require("./mongoose/mongoose-models").Raspberry;
+import {Raspberry as raspberryModel} from "./mongoose/mongoose-models";
 var Promise = require("bluebird");
 
-Raspberry = function() {}
+var Raspberry = function() {}
 
 Raspberry.modulesListeners = {};
 
@@ -39,7 +39,8 @@ Raspberry.emitTo = function(name, event, data) {
 			if (!raspberry.socketId) {
 				return reject({code: 404, message: "no raspberry with that name", id: "RASPBERRY_NOT_FOUND"});
 			}
-			process.io.sockets.connected[raspberry.socketId].emit(event, data);
+			if (process.messager)
+				process.messager(undefined, event, data);
 		}).catch(reject);
 	});
 }
@@ -92,6 +93,20 @@ Raspberry.stop = function(name) {
 			}).catch(reject);
 	});
 }
+Raspberry.stopAll = function() {
+	return new Promise(function(resolve, reject) {
+		raspberryModel.find({}, "name", function(err, raspberries) {
+			if(err) return reject(err);
+			var promises = []
+			for(var i = 0; i < raspberries.length; i++) {
+				promises.push(Raspberry.stop(raspberries[i].name))
+			}
+			Promise.all(promises, function(data) {
+				resolve(data);
+			})
+		})
+	});
+}
 
 Raspberry.getAll = function() {
 	return new Promise(function(resolve, reject) {
@@ -114,9 +129,10 @@ Raspberry.moduleStarted = function(raspberryName, moduleInfo) {
 				console.log("got raspberry");
 				for(var i = 0; i < raspberry.modules.length; i++) {
 					if (moduleInfo.name === raspberry.modules[i].name) {
-						console.log("found module");
+						console.log("found module")
 						raspberry.modules[i].state = "UP";
 						Raspberry._notifyModuleChange(raspberry, raspberry.modules[i], moduleInfo);
+						break;
 					}
 				}
 				raspberry.save(function(err) {
@@ -156,4 +172,4 @@ Raspberry.status = {
 	PAUSED: "PAUSED"
 }
 
-module.exports = Raspberry;
+export default Raspberry;

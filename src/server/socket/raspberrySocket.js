@@ -1,3 +1,4 @@
+/*
 var Raspberry  = require(__base + "models/Raspberry");
 
 
@@ -7,10 +8,10 @@ module.exports = function(socket) {
 		console.log('raspberry:module:new...');
 		Raspberry.moduleStarted(socket.raspberryInfo.name, data)
 			.then(function(raspberry, module) {
-				console.log("DONE");
-				socket.broadcast.emit("raspberry:module:new", module);
+				console.log("DONE ");
 			}).catch(function(err) {
 				console.log(err);
 			});
 	});
 };
+*/

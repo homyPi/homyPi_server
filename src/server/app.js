@@ -1,7 +1,9 @@
-'use strict';
+"use strict";
 global.__base = __dirname + "/";
 global.__modules = __dirname + "/modules/";
 
+import MqttServer from "./modules/mqttServer";
+import setEvents from "./socket/events";
 var env = require('node-env-file');
 try {
 	env(".env");
@@ -19,7 +21,12 @@ ModuleManager.init();
 
 var schema = require('./models/mongoose/mongoose-schema.js')(ModuleManager);
 var models = require('./models/mongoose/mongoose-models.js');
-var connection = require('./models/mongoose/mongoose-connection')(config);
+
+var Raspberry = require("./models/Raspberry");
+
+var connection = require('./models/mongoose/mongoose-connection')(config, function() {
+	
+});
 
 var winston = require('winston');
 var expressWinston = require('express-winston');
@@ -77,9 +84,12 @@ app.use(expressWinston.logger({
 		return false;
 	} // optional: allows to skip some log messages based on request and/or response
 }));
-ModuleManager.load().then(function() {
-	var socket = require("./socket/socket");
 
+process.messager = new MqttServer(server);
+setEvents(process.messager);
+process.messager.start().then(()=> console.log("started"));
+
+ModuleManager.load(process.messager).then(function() {
 	routes(app);
 	app.get('*', function(req, res, next) {
 	  var err = {};
@@ -104,9 +114,9 @@ ModuleManager.load().then(function() {
 	  }
 	  res.status(500);
 	});
-	process.io = socket.init(server);
-
+	//Raspberry.stopAll();
 	server.listen(process.env.PORT || 3000, function () {
+
 		var host = server.address().address;
 		var port = server.address().port;
 		console.log('Example app listening at http://%s:%s', host, port);

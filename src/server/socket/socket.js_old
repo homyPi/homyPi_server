@@ -1,7 +1,6 @@
 /**
  * Created by nolitsou on 9/6/15.
  */
-/*
 var socketioJwt = require("socketio-jwt");
 var config = require(__base + "data/private/config.js");
 
@@ -73,4 +72,3 @@ IO.init = function(server) {
 };
 
 module.exports = IO;
-*/

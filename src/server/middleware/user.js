@@ -1,4 +1,4 @@
-var userModel = require("../models/mongoose/mongoose-models").User;
+import {User as userModel} from "../models/mongoose/mongoose-models";
 var jwt = require("jwt-simple");
 var fs = require("fs");
 var bcrypt = require('bcrypt');

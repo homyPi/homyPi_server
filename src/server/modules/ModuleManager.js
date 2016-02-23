@@ -6,9 +6,12 @@ var ServicesManager = require("./ServicesManager");
 var config = require("../data/private/config");
 
 
-ModuleManager = function() {};
+var ModuleManager = function() {};
 
-ModuleManager.Raspberry;
+ModuleManager.Shared = {
+	config: config,
+	modules: {}
+};
 ModuleManager.UserMiddleware;
 ModuleManager.MongooseModels;
 
@@ -61,21 +64,27 @@ ModuleManager._setModule = function(module, moduleName) {
 			console.log("Setting up " + moduleName);
 			//checkConfig(module, moduleName);
 			if (!module.module) {
-				var mod = require(moduleName + "/server");
-				module.module = mod;
+				module.module = require(moduleName + "/server");
 			}
-			if (typeof module.module.link === "function") {
-				module.module.link(ModuleManager, Raspberry, MongooseModels, UserMiddleware, config);
+			if (module.module.shared) {
+				ModuleManager.Shared.modules[moduleName] = module.module.shared;
+			}
+			if (typeof module.module.link.load === "function") {
+				module.module.link.load(ModuleManager.Shared, config);
 			}
 			console.log(moduleName + " LOADED");
+			/*
 			if(typeof module.getServices === "function") {
 				ServicesManager.addServices(module.getServices());
 			}
+			*/
 			if(typeof module.module.init === "function") {
+				console.log("init " + JSON.stringify(module.module));
 				return module.module.init().then(resolve).catch(reject);
 			} else {
 				return resolve();
 			}
+			process.exit();
 		} catch(e) {
 			console.log(e);
 			console.log(e.stack);
@@ -115,18 +124,20 @@ ModuleManager.executeSorted = function(fn) {
 		}
 	}
 };
-ModuleManager.load = function() {
+ModuleManager.load = function(messager) {
 		return new Promise(function(resolve, reject) {
 			console.log("Loading modules");
-			Raspberry = require("../models/Raspberry");
-			UserMiddleware = require("../middleware/user");
-			MongooseModels = require("../models/mongoose/mongoose-models");
+			ModuleManager.Shared.messager = messager;
+			ModuleManager.Shared.Raspberry = require("../models/Raspberry").default;
+			ModuleManager.Shared.User = require("../middleware/user");
+			ModuleManager.Shared.MongooseModels = require("../models/mongoose/mongoose-models");
 			ModuleManager.executePromiseSorted(ModuleManager._setModule)
 				.then(resolve)
 				.catch(reject);
 		});
 		//executeSorted(setModule);
 	};
+/*
 ModuleManager.setUpSocket = function(socket, io) {
 		_.forEach(ModuleManager.modules, function(module, key) {
 			if(module.module && typeof module.module.setSocket === "function") {
@@ -135,6 +146,7 @@ ModuleManager.setUpSocket = function(socket, io) {
 			}
 		});
 	};
+*/
 ModuleManager.getAll = function() {
 		return ModuleManager.modules;
 	};

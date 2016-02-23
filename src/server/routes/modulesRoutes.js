@@ -16,7 +16,7 @@ module.exports = function(app, router) {
 		}
 	});
 	router.use("/", function(req, res) {
-		res.json(modulesManager.modules);
+		res.json({status: "error", "error": "TODO: Route"});
 	});
 	app.use("/api/modules", router);
 };

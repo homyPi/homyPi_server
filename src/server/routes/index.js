@@ -11,6 +11,17 @@ module.exports = function(app) {
 		"use strict";
 		res.sendFile('/index.html');
 	});
+	app.get("/api/config", function(req, res) {
+		var host = req.get('host').split(":")[0];
+		res.json({
+			status: "success",
+			"config": {
+				mqtt: {
+					url: "tcp://" + host + ":" +process.messager.getPort()
+				}
+			}
+		});
+	})
 	userRoutes(app);
 	//alarmRoutes(app);
 	//gracenoteRoutes(app);
