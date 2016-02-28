@@ -1,5 +1,5 @@
 var mqtt    = require('mqtt');
-var client  = mqtt.connect('http://localhost:3005/');
+var client  = mqtt.connect('tcp://localhost:3005');
 var readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout);
 

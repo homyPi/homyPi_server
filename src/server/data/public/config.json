@@ -1,10 +1,16 @@
 {
 	"modules": {
+		"homyPi-server-alarm":{
+			"package": "../homyPi_plugins/alarm"
+		},
 		"homyPi-server-music": {
 			"package": "../homyPi_plugins/music"
 		},
 		"homyPi-server-spotify": {
 			"package": "git://github.com/homyPi/homyPi-server-spotify.git#master"
+		},
+		"homyPi-server-musicgraph": {
+			"package": "git://github.com/homyPi/homyPi-server-musicgraph.git#master"
 		}
 	}
 }

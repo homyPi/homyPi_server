@@ -2,6 +2,8 @@ var userRoutes = require("./userRoutes");
 //var gracenoteRoutes = require("./gracenoteRoutes");
 var raspberryRoutes = require("./raspberryRoutes");
 
+var os = require("os");
+
 var modulesRoutes = require("./modulesRoutes");
 var servicesRoutes = require("./servicesRoutes");
 
@@ -12,7 +14,7 @@ module.exports = function(app) {
 		res.sendFile('/index.html');
 	});
 	app.get("/api/config", function(req, res) {
-		var host = req.get('host').split(":")[0];
+		var host = os.hostname().split(":")[0];
 		res.json({
 			status: "success",
 			"config": {

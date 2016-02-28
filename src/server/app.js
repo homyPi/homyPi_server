@@ -90,7 +90,7 @@ setEvents(process.messager);
 process.messager.start().then(()=> console.log("started"));
 
 ModuleManager.load(process.messager).then(function() {
-	routes(app);
+	routes(app, server);
 	app.get('*', function(req, res, next) {
 	  var err = {};
 	  err.status = 404;
