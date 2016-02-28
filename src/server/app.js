@@ -2,17 +2,11 @@
 global.__base = __dirname + "/";
 global.__modules = __dirname + "/modules/";
 
+
 import MqttServer from "./modules/mqttServer";
 import setEvents from "./socket/events";
-var env = require('node-env-file');
-try {
-	env(".env");
-} catch(e) {
-	console.log(e);
-	console.log("unable to get env file");
-}
-var config = require("./data/private/config.js");
 
+var config = require("./data/private/config.js");
 var express = require('express');
 var routes = require("./routes");
 
@@ -25,7 +19,7 @@ var models = require('./models/mongoose/mongoose-models.js');
 var Raspberry = require("./models/Raspberry");
 
 var connection = require('./models/mongoose/mongoose-connection')(config, function() {
-	
+
 });
 
 var winston = require('winston');
@@ -96,7 +90,7 @@ ModuleManager.load(process.messager).then(function() {
 	  err.status = 404;
 	  next(err);
 	});
-	 
+
 	// handling 404 errors
 	app.use(function(err, req, res, next) {
 	  console.error(err.stack);

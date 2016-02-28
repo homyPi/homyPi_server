@@ -1,4 +1,3 @@
-
 module.exports = {
     "server_config" : {
         "PORT" : process.env.HOMYPI_SERVER_PORT,

@@ -3,10 +3,20 @@
 import socketIO from "socket.io";
 var ioWildcard = require("socketio-wildcard")();
 */
-import Promise from "bluebird";
-import mosca from "mosca";
+let Promise = require("bluebird");
+let mosca = require("mosca");
 import Raspberry from "../models/Raspberry";
+var config = require("../data/private/config.js");
+let jwt = require("jwt-simple");
 
+function authenticate(client, username, passwrd, callback) {
+    try {
+        client.user = jwt.decode(client.id, config.jwtSecret);
+        callback(null, true);
+    } catch(e) {
+        callback(null, false);
+    }
+}
 
 class MqttServer {
 	constructor(server) {
@@ -103,9 +113,8 @@ class MqttServer {
 	start() {
 		return new Promise((resolve, reject) => {
 			this.mqtt.on('ready',() => {
-
+                this.mqtt.authenticate = authenticate;
 				console.log('Mosca server is up and running on port ' + this.getPort());
-				console.log((this.mqtt.opts));
 				resolve();
 			});
 		});
