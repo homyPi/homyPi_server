@@ -1,7 +1,7 @@
-var env = require('node-env-file');
+var env = require("node-env-file");
 try {
-	env(".env");
-} catch(e) {
-	console.log(e);
-	console.log("unable to get env file");
+    env(".env");
+} catch (e) {
+    console.log(e);
+    console.log("unable to get env file");
 }

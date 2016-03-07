@@ -33,6 +33,7 @@
     "material-ui-sass": "^0.7.5",
     "mongoose": "^4.1.7",
     "mosca": "^1.0.2",
+    "mqtt": "^1.7.3",
     "node-env-file": "^0.1.7",
     "node-gcm": "^0.12.0",
     "object-assign": "^4.0.1",
@@ -91,7 +92,7 @@
     ]
   },
   "scripts": {
-    "test": "mocha ./src/server/test --timeout 10000 -r ./src/server/test/init",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register ./src/server/test --timeout 10000 -r ./src/server/test/init",
     "start": "gulp buildClient; npm run server",
     "server": "node src/server/start.js",
     "postinstall": "",
