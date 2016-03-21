@@ -2,7 +2,6 @@
 /* global it */
 /* global before */
 
-global.__base = __dirname + "/../";
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 import should from "should";    // eslint-disable-line no-unused-vars
@@ -19,6 +18,9 @@ const TestModules = {
     },
     withShared: {
         directory: __dirname + "/testModules/withShared"
+    },
+    externalsSchema: {
+        directory: __dirname + "/testModules/externalsSchema"
     }
 };
 
@@ -47,6 +49,24 @@ describe("modulesManager", () => {
         models.simpleTestSchema.schema.paths.should.have.property("cats");
         models.simpleTestSchema.schema.paths.should.have.property("dogs");
         models.simpleTestSchema.schema.paths.cats.should.be.an.instanceOf(Schema.Types.Mixed);
+        done();
+    });
+    it("Externals should works", function (done) {
+        models.should.not.have.property("shouldNotBeCreated");
+        models.should.have.property("simpleTestSchema");
+        models.simpleTestSchema.schema.should.have.property("tree");
+        /* eslint-disable */
+        models.simpleTestSchema.schema.tree.should.have.property("cats")
+          .and.be.an.Object;
+        /* eslint-enable */
+        models.simpleTestSchema.schema.tree.should.have.property("dogs");
+        models.simpleTestSchema.schema.tree.should.have.property("externals");
+        models.simpleTestSchema.schema.tree.externals.should.have.property("shouldBeCreatedOne");
+        models.simpleTestSchema.schema.tree.externals.should.have.property("shouldBeCreatedTwo");
+        models.simpleTestSchema.schema.tree.externals.should.have.property("inDouble");
+        /*
+        models.should.have.property("shouldBeCreatedOne");
+        models.should.have.property("shouldBeCreatedTwo");*/
         done();
     });
 

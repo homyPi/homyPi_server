@@ -60,6 +60,9 @@ ModuleManager._setOrder = function () {
 };
 ModuleManager._setModule = function (module, moduleName) {
     return new Promise(function (resolve, reject) {
+        if (!module) {
+            return reject("unknown module " + moduleName);
+        }
         if (module.error) {
             return reject(module.error);
         }

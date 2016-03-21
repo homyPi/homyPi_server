@@ -1,8 +1,5 @@
-/*global module*/
-/*global require*/
-var mongoose = require("mongoose");
-var schema = require("./mongoose-schema");
-
+/* global module */
+/* global require */
 var MongooseModels = function() {};
 
 export default MongooseModels;
