@@ -13,12 +13,12 @@ var routes = require("./routes");
 var ModuleManager = require("./modules/ModuleManager");
 ModuleManager.init();
 
-var schema = require("./models/mongoose/mongoose-schema.js")(ModuleManager);
-var models = require("./models/mongoose/mongoose-models.js");
+require("./models/mongoose/mongoose-schema.js")(ModuleManager);
+require("./models/mongoose/mongoose-models.js");
 
 // var Raspberry = require("./models/Raspberry");
 
-var connection = require("./models/mongoose/mongoose-connection")(config, function () {
+require("./models/mongoose/mongoose-connection")(config, function () {
 
 });
 
