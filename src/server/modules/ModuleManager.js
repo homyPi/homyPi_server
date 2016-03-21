@@ -5,7 +5,7 @@ var Toposort = require("toposort-class"),
 var ServicesManager = require("./ServicesManager");
 var config = require("../data/private/config");
 
-
+/* istanbul ignore next */
 var ModuleManager = function () {};
 
 ModuleManager.Shared = {
@@ -44,7 +44,9 @@ ModuleManager._setOrder = function () {
         var mGraph = [];
         console.log(ModuleManager.modules[m]);
         if (!ModuleManager.modules[m] || !ModuleManager.modules[m].loaded) {
-            if (!ModuleManager.modules[m]) ModuleManager.modules[m] = {};
+            if (!ModuleManager.modules[m]) {
+                ModuleManager.modules[m] = {};
+            }
             var moduleConfig = require(ModuleManager.modules[m].directory + "/server/config");
             ModuleManager.modules[m] = Object.assign(ModuleManager.modules[m], moduleConfig);
             ModuleManager.modules[m].loaded = true;
@@ -100,8 +102,9 @@ ModuleManager._setModule = function (module, moduleName) {
 };
 ModuleManager.executePromiseSorted = function (fn, i) {
     return new Promise(function (resolve, reject) {
-        if (!ModuleManager.order.length || typeof fn !== "function") return resolve();
-
+        if (!ModuleManager.order.length || typeof fn !== "function") {
+            return resolve();
+        }
         if (typeof i === "undefined") {
             i = 0;
         }
@@ -122,7 +125,9 @@ ModuleManager.executePromiseSorted = function (fn, i) {
 };
 
 ModuleManager.executeSorted = function (fn) {
-    if (typeof fn !== "function") return;
+    if (typeof fn !== "function"){
+        return;
+    }
     for (var i = 0; i < ModuleManager.order.length; i++) {
         console.log(ModuleManager.order[i]);
         if (ModuleManager.modules[ModuleManager.order[i]]) {

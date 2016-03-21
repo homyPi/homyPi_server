@@ -73,7 +73,6 @@ describe("modulesManager", () => {
     it("modules shared functions", function (done) {
         ModuleManager.load()
           .then(() => {
-              console.log("::");
               ModuleManager.Shared.modules.should.have.property("withShared");
               ModuleManager.Shared.modules.withShared.should.have.property("superUsefull");
               /* eslint-disable no-unused-expressions */

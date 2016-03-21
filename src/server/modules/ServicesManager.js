@@ -1,11 +1,12 @@
 var _ = require("lodash");
 var Promise = require("bluebird");
 
+/* istanbul ignore next */
 var ServiceManager = function () {};
 ServiceManager.services = [];
 
 var setService = function (service) {
-    if (!service.auth || !service.name) {
+    if (!service || !service.auth || !service.name) {
         return null;
     }
     if (service.auth.type === "oauth") {
@@ -71,6 +72,7 @@ module.exports = {
             });
             Promise.all(promises).then(function (results) {
                 for (var i = 0; i < data.length; i++) {
+                    data[i] = data[i] || {};
                     if (!results[i]) {
                         data[i].isLoggedIn = false;
                     } else {
@@ -92,8 +94,10 @@ module.exports = {
             console.log("Calling function");
             return service.auth.getUser(req.user)
                 .then(function (user) {
+                    console.log("call res.json SUX");
                     res.json({status: "success", data: {user}});
                 }).catch(function (error) {
+                    console.log("call res.json ERROR");
                     res.json({status: "error", error});
                 });
         }
