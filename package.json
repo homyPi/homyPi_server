@@ -65,6 +65,7 @@
     "babelify": "^6.3.0",
     "chai": "^3.5.0",
     "commander": "^2.9.0",
+    "coveralls": "^2.11.8",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-connect": "^2.2.0",
@@ -76,6 +77,7 @@
     "gulp-watch": "^4.3.5",
     "isparta": "^4.0.0",
     "mocha": "^2.3.3",
+    "mocha-lcov-reporter": "^1.2.0",
     "mockgoose": "^5.3.3",
     "mqtt": "^1.7.0",
     "should": "^7.1.0",
@@ -97,6 +99,7 @@
   },
   "scripts": {
     "coverage": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover --root ./src/server ./node_modules/.bin/_mocha -- src/server/test/",
+    "coveralls": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover --root ./src/server ./node_modules/.bin/_mocha -- src/server/test/ --report lcovonly && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register ./src/server/test --timeout 5000 ./src/server/test/init",
     "start": "gulp buildClient; npm run server",
     "server": "node src/server/start.js",
