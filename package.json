@@ -58,9 +58,6 @@
     "winston": "^1.0.1"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
-    "babel-cli": "^6.6.5",
-    "babel-eslint": "^4.1.1",
     "babelify": "^6.3.0",
     "chai": "^3.5.0",
     "commander": "^2.9.0",
